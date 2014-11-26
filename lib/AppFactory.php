@@ -35,11 +35,11 @@ class AppFactory {
         $app->view->parserExtensions = array(new \Slim\Views\TwigExtension());
 
         // Prepare middleware
-        // $app->add(new \SlimJson\Middleware(array(
-        //   'json.status'            => false,
-        //   'json.override_error'    => false,
-        //   'json.override_notfound' => false
-        // )));
+        $app->add(new \SlimJson\Middleware(array(
+          'json.status'            => false,
+          'json.override_error'    => false,
+          'json.override_notfound' => false
+        )));
 
         // Define API routes
         $app->group('/api', function () use ($app) {

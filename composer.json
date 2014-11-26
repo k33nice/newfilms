@@ -4,9 +4,9 @@
     "keywords": ["project keywords"],
     "authors": [
         {
-            "name": "Anton Morozov",
-            "email": "anton@webbylab.com",
-            "homepage": "http://www.webbylab.com/"
+            "name": "Alexandr Krykovliuk",
+            "email": "krykovliuk@gmail.com",
+            "homepage": "http://www.krykovliuk.in.ua/"
         }
     ],
     "require": {

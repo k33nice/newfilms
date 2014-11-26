@@ -1,0 +1,37 @@
+{
+    "name": "Project name",
+    "description": "project description",
+    "keywords": ["project keywords"],
+    "authors": [
+        {
+            "name": "Anton Morozov",
+            "email": "anton@webbylab.com",
+            "homepage": "http://www.webbylab.com/"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "monolog/monolog": "1.*",
+        "slim/slim": "2.*",
+        "slim/views": "0.*",
+        "twig/twig": "1.*",
+        "propel/propel": "2.0.0-alpha2",
+        "validator/livr": "dev-master",
+        "dogancelik/slim-json": "dev-master",
+        "components/jquery": "2.*",
+        "components/underscore": "*",
+        "components/bootstrap": "*",
+        "components/typeahead.js": "*"
+    },
+    "require-dev": {
+        "there4/slim-test-helpers": "dev-master",
+        "phpunit/phpunit": "4.*"
+    },
+    "config": {
+        "component-dir": "public/static/vendor",
+        "component-baseurl": "/static"
+    },
+    "autoload": {
+        "classmap": ["lib/"]
+    }
+}

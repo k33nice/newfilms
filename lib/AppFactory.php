@@ -34,18 +34,20 @@ class AppFactory {
         );
         $app->view->parserExtensions = array(new \Slim\Views\TwigExtension());
 
-        // Prepare middleware
-        // $app->add(new \SlimJson\Middleware(array(
-        //   'json.status'            => false,
-        //   'json.override_error'    => false,
-        //   'json.override_notfound' => false
-        // )));
+         // Prepare middleware
+        $app->get('/api', function() use ($app) {
+            $app->add(new \SlimJson\Middleware(array(
+              'json.status'            => false,
+              'json.override_error'    => false,
+              'json.override_notfound' => false
+            )));
+        });
 
         // Define API routes
         $app->group('/api', function () use ($app) {
             $app->group('/films', function() use ($app) {
                 $films = new \Controller\Films($app);
-                $app->get('/', array($films, 'index'));
+                $app->get('/', array($films, 'index'))->name(films_index);
                 $app->get('/:Id', array($films, 'show'))->name('films_show');
                 $app->delete('/:Id', array($films, 'delete'))->name('films_delete');
                 $app->post('/:Id', array($films, 'update'))->name('films_update');
@@ -68,7 +70,6 @@ class AppFactory {
             // $app->log->info("Slim-Skeleton '/' route");
 
             // Render index view
-            // $app->render('index.html');
             $app->render('index.html');
         });
 

@@ -9,6 +9,7 @@
     <style>
     form {display: inline-block; margin: 0.5em;}
     ul{list-style: none;}
+    span{margin: 0 0.6em;}
     </style>
 </head>
 <body>
@@ -149,7 +150,12 @@
                 contentType: "application/json; charset=utf-8",
                 success: function(resultData) {
 
-                        u = /.+[0-9]*/
+                        var u = new RegExp("/\d*");
+                        if(u.test(url)===false) {
+                            delete this.url;
+                        };
+
+
 
                     switch(url) {
                         case "/":
@@ -182,11 +188,11 @@
                             // }).appendTo("body");
                             // console.log(resultData.Films);
                             break;
-                        case "/78":
+                        case url:
                             var films = [];
                             $.each(resultData, function(key, value) {
 
-                                var fil = [];
+                                // var fil = [];
 
                                 // $.each(val, function(k, value) {
                                     films.push(
@@ -194,9 +200,8 @@
                                             "<form method='post' action='api/films/"+ value.Id+"'>"+
                                                 "<input value='DELETE' name='_METHOD' type='hidden'>" +
                                                 "<input value='удалить' type='submit' class='del-butt' name='del-submit'>"
-                                                + value.Name + value.Year + value.Format+
+                                                + "<span>"+value.Name+"</span><span>"+value.Year+"</span><span>"+value.Format+"</span>"+
                                            "</form>"+
-                                           "<a href='"+value.Id +"'>Info</a>"+
                                        "</li>"
                                        );
                                 // });
@@ -207,6 +212,7 @@
                                     "class": "films",
                                     html: films.join("")
                                 }).appendTo("div.a");
+                              break;
 
                    } //End switch
                 },

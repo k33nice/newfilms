@@ -36,7 +36,7 @@ class Show extends \Service\Base {
 
             return [
                 'Film'   => $row,
-                'status' => 1
+                // 'status' => 1
             ];
         } catch (\Engine\X\AcessDenied $e) {
             throw new \Service\X([

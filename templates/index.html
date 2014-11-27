@@ -17,7 +17,7 @@
     <div class="handler"></div>
     <div class="a"></div>
     {% block content %} {% endblock %}
-        <form action="/main/search" method="post">
+<!--         <form action="/main/search" method="post">
             <label for="search-title"></label>
             <input type="text" name="search-title">
             <input type="submit" name="submit" value="Поиск">
@@ -26,7 +26,7 @@
             <label for="search-actor"></label>
             <input type="text" name="search-actor">
             <input type="submit" name="submit-actor" value="Поиск">
-        </form>
+        </form> -->
     <script src="static/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script>
 
@@ -44,6 +44,33 @@
         var url = parser.pathname;
 
         var id ;
+
+        /**
+         *#############################################*
+         *#                 Search form               #*
+         *#############################################*
+         */
+        var searchForm = document.createElement("form");
+            searchForm.setAttribute("method", "get");
+            searchForm.setAttribute("action", "api/films/");
+
+        var searchInput = document.createElement("input");
+            searchInput.setAttribute("type", "text");
+            searchInput.setAttribute("name", "search-input");
+
+        var searchSubmit = document.createElement("input");
+            searchSubmit.setAttribute("type", "submit");
+            searchSubmit.setAttribute("value", "поиск");
+
+            searchForm.appendChild(searchInput);
+            searchForm.appendChild(searchSubmit);
+
+            document.getElementsByTagName("div")[0].appendChild(searchForm);
+        /**
+         *#############################################*
+         *#              End Search Form              #*
+         *#############################################*
+         */
 
         switch (url) {
             case "/add":
@@ -80,23 +107,23 @@
 
                 break;
             case "/delete":
-                var deleteForm = document.createElement("form");
-                    deleteForm.setAttribute("method","post");
-                    deleteForm.setAttribute("action","api/films/");
+                // var deleteForm = document.createElement("form");
+                //     deleteForm.setAttribute("method","post");
+                //     deleteForm.setAttribute("action","api/films/");
 
-                var hiddenDeleteInput = document.createElement("input");
-                    hiddenDeleteInput.setAttribute("type","hidden");
-                    hiddenDeleteInput.setAttribute("name","_METHOD");
-                    hiddenDeleteInput.setAttribute("value","DELETE");
+                // var hiddenDeleteInput = document.createElement("input");
+                //     hiddenDeleteInput.setAttribute("type","hidden");
+                //     hiddenDeleteInput.setAttribute("name","_METHOD");
+                //     hiddenDeleteInput.setAttribute("value","DELETE");
 
-                var submitDeleteInput = document.createElement("input");
-                    submitDeleteInput.setAttribute("type","submit");
-                    submitDeleteInput.setAttribute("value","удалить");
+                // var submitDeleteInput = document.createElement("input");
+                //     submitDeleteInput.setAttribute("type","submit");
+                //     submitDeleteInput.setAttribute("value","удалить");
 
-                deleteForm.appendChild(hiddenDeleteInput);
-                deleteForm.appendChild(submitDeleteInput);
+                // deleteForm.appendChild(hiddenDeleteInput);
+                // deleteForm.appendChild(submitDeleteInput);
 
-                document.getElementsByTagName("body")[0].appendChild(deleteForm);
+                // document.getElementsByTagName("body")[0].appendChild(deleteForm);
 
                 break;
         };
@@ -112,33 +139,21 @@
                     $.each(resultData, function(key, val) {
 
                         $.each(val, function(k, value) {
-                            val.push("<li id='" + value.Id + "'><input value='"
-                                                 + value.Id + "' type='checkbox' class='check' name='checkbox[]'>"
-                                       + value.Name + "</li>");
+                            val.push(
+                                "<li id='" + value.Id + "'>"+
+                                    "<form method='post' action='api/films/"+ value.Id+"'>"+
+                                        "<input value='DELETE' name='_METHOD' type='hidden'>" +
+                                        "<input value='удалить' type='submit' class='del-butt' name='submit'>"
+                                        + value.Name +
+                                   "</form>" +
+                               "</li>"
+                               );
                         });
                         $("<ul/>", {
                             "class": "films",
                             html: val.join("")
                         }).appendTo("div.a");
                         films.push("<li id='" + key + "'>" + val + "</li>");
-
-                        var deleteForm = document.createElement("form");
-                            deleteForm.setAttribute("method","post");
-                            deleteForm.setAttribute("action","api/films/");
-
-                        var hiddenDeleteInput = document.createElement("input");
-                            hiddenDeleteInput.setAttribute("type","hidden");
-                            hiddenDeleteInput.setAttribute("name","_METHOD");
-                            hiddenDeleteInput.setAttribute("value","DELETE");
-
-                        var submitDeleteInput = document.createElement("input");
-                            submitDeleteInput.setAttribute("type","submit");
-                            submitDeleteInput.setAttribute("value","удалить отмеченые");
-
-                        deleteForm.appendChild(hiddenDeleteInput);
-                        deleteForm.appendChild(submitDeleteInput);
-
-                        document.getElementsByTagName("body")[0].appendChild(deleteForm);
 
                     });
                     $("<ul/>", {

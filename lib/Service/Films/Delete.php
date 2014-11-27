@@ -13,13 +13,12 @@ class Delete extends \Service\Base {
     }
 
     public function execute($params) {
-        $self = $this;
+        // $self = $this;
         try {
 
-            $film = \Engine\EmployeesQuery::create()
-                ->filterByRealUserID($params['Id'])
-                ->filterAllowedForUser($self->getUser())
-                ->findOne();
+            $film = \Engine\FilmsQuery::create()
+                ->findOneById($params['Id'])
+                ->delete();
 
             if (!$film) {
                 throw new \Service\X([
@@ -28,6 +27,8 @@ class Delete extends \Service\Base {
                     'message' => 'Cannot find film with id = '.$params['Id']
                 ]);
             }
+
+            // $film->delete();
 
             return [
                 'status' => 1

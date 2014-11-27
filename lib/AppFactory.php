@@ -65,13 +65,13 @@ class AppFactory {
         });
 
         // Define routes
-        $app->get('/', function () use ($app) {
+        $app->get(':method', function ($method) use ($app) {
             // Sample log message
             // $app->log->info("Slim-Skeleton '/' route");
 
             // Render index view
             $app->render('index.html');
-        });
+        })->conditions(array('method' => '.+'));
 
         self::$slimInstance = $app;
     }

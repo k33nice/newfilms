@@ -25,10 +25,10 @@ class Films extends Base {
         });
     }
 
-    public function delete($filmId)
+    public function delete($Id)
     {
         $self = $this;
-        $data = [ 'filmId' => $filmId ];
+        $data = [ 'Id' => $Id ];
 
         $this->run(function() use ($self, $data) {
             return $self->action("Service\Films\Delete")->run($data);
@@ -45,12 +45,12 @@ class Films extends Base {
         });
     }
 
-    public function update($filmId)
+    public function update($Id)
     {
         $self = $this;
 
         $data = $self->request()->params();
-        $data['filmId'] = $filmId;
+        $data['Id'] = $Id;
 
         $this->run(function() use ($self, $data) {
             return $self->action("Service\Films\Update")->run($data);

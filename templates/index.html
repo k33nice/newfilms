@@ -3,18 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <!--<link rel="stylesheet" href="../css/style.css"> -->
     <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 </head>
 <body>
     <nav>
-        <a href="/main">Главная</a>
+        <a href="/">Главная</a>
         <a href="/add">Добавить</a>
         <a href="/delete">Удалить</a>
         <a href="/import">Импорт</a>
     </nav>
+    <div class="handler"></div>
+    <div class="a"></div>
     {% block content %} {% endblock %}
+        <form action="/main/search" method="post">
+            <label for="search-title"></label>
+            <input type="text" name="search-title">
+            <input type="submit" name="submit" value="Поиск">
+        </form>
+        <form action="/main/search" method="post">
+            <label for="search-actor"></label>
+            <input type="text" name="search-actor">
+            <input type="submit" name="submit-actor" value="Поиск">
+        </form>
     <script src="static/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+
+        var parser = document.createElement('a');
+        parser.href = document.URL;
+
+        parser.protocol; // => "http:"
+        parser.hostname; // => "example.com"
+        parser.port;     // => "3000"
+        parser.pathname; // => "/pathname/"
+        parser.search;   // => "?search=test"
+        parser.hash;     // => "#hash"
+        parser.host;     // => "example.com:3000"
+
+        var url = parser.pathname;
+
+        var id ;
+
+        switch (url) {
+            case "/add":
+                var addForm = document.createElement("form");
+                    addForm.setAttribute("method", "post");
+                    addForm.setAttribute("action", "api/films/");
+
+                var titleAddImput = document.createElement("input");
+                    titleAddImput.setAttribute("type", "text");
+                    titleAddImput.setAttribute("name", "title");
+                    titleAddImput.setAttribute("value", "title");
+
+                var yearAddImput = document.createElement("input");
+                    yearAddImput.setAttribute("type", "text");
+                    yearAddImput.setAttribute("name", "year");
+                    yearAddImput.setAttribute("value", "year");
+
+                var formatAddImput = document.createElement("input");
+                    formatAddImput.setAttribute("type", "text");
+                    formatAddImput.setAttribute("name", "format");
+                    formatAddImput.setAttribute("value", "format");
+
+                var actorAddImput = document.createElement("input");
+                    actorAddImput.setAttribute("type", "text");
+                    actorAddImput.setAttribute("name", "actor");
+                    actorAddImput.setAttribute("value", "actor");
+
+                addForm.appendChild(titleAddImput);
+                addForm.appendChild(yearAddImput);
+                addForm.appendChild(formatAddImput);
+                addForm.appendChild(actorAddImput);
+
+                document.getElementsByTagName("body")[0].appendChild(addForm);
+
+                break;
+            case "/delete":
+                var deleteForm = document.createElement("form");
+                    deleteForm.setAttribute("method","post");
+                    deleteForm.setAttribute("action","api/films/");
+
+                var hiddenDeleteInput = document.createElement("input");
+                    hiddenDeleteInput.setAttribute("type","hidden");
+                    hiddenDeleteInput.setAttribute("name","_METHOD");
+                    hiddenDeleteInput.setAttribute("value","DELETE");
+
+                var submitDeleteInput = document.createElement("input");
+                    submitDeleteInput.setAttribute("type","submit");
+                    submitDeleteInput.setAttribute("value","удалить");
+
+                deleteForm.appendChild(hiddenDeleteInput);
+                deleteForm.appendChild(submitDeleteInput);
+
+                document.getElementsByTagName("body")[0].appendChild(deleteForm);
+
+                break;
+        };
+
+
+            jQuery.ajax({
+                url: "/api/films"+url,
+                type: "GET",
+
+                contentType: "application/json; charset=utf-8",
+                success: function(resultData) {
+                    var films = [];
+                    $.each(resultData, function(key, val) {
+
+                        $.each(val, function(k, value) {
+                            val.push("<li id='" + value.Id + "'><input value='"
+                                                 + value.Id + "' type='checkbox' class='check' name='checkbox[]'>"
+                                       + value.Name + "</li>");
+                        });
+                        $("<ul/>", {
+                            "class": "films",
+                            html: val.join("")
+                        }).appendTo("div.a");
+                        films.push("<li id='" + key + "'>" + val + "</li>");
+
+                        var deleteForm = document.createElement("form");
+                            deleteForm.setAttribute("method","post");
+                            deleteForm.setAttribute("action","api/films/");
+
+                        var hiddenDeleteInput = document.createElement("input");
+                            hiddenDeleteInput.setAttribute("type","hidden");
+                            hiddenDeleteInput.setAttribute("name","_METHOD");
+                            hiddenDeleteInput.setAttribute("value","DELETE");
+
+                        var submitDeleteInput = document.createElement("input");
+                            submitDeleteInput.setAttribute("type","submit");
+                            submitDeleteInput.setAttribute("value","удалить отмеченые");
+
+                        deleteForm.appendChild(hiddenDeleteInput);
+                        deleteForm.appendChild(submitDeleteInput);
+
+                        document.getElementsByTagName("body")[0].appendChild(deleteForm);
+
+                    });
+                    $("<ul/>", {
+                        "class": "films-list",
+                        html: flims.join("")
+                    }).appendTo("body");
+
+
+                    // console.log(resultData.Films);
+                },
+                timeout: 120000,
+            });
+
+    </script>
 </body>
 </html>

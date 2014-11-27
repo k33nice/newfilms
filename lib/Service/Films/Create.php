@@ -18,7 +18,7 @@ class Create extends \Service\Base {
         try {
             // $params += ['SubsidiaryID' => ''];
 
-            $query = \Engine\FilmsQuery::create()->filterByEmail($params['Email']);
+            $query = \Engine\FilmsQuery::create()->save();
 
             if ($query->count() == 0) {
                 throw new \Service\X([
@@ -36,9 +36,9 @@ class Create extends \Service\Base {
                 ]);
             }
 
-            $dealer = $this->getDealer();
+            // $dealer = $this->getDealer();
 
-            $subsidiary = \Engine\SubsidiariesQuery::create()
+            $subsidiary = \Engine\ActorsQuery::create()
                 ->filterBySubsidiaryID($params['SubsidiaryID'])
                 ->filterByDealerID($dealer->getDealerID())
                 ->findOne();
@@ -51,7 +51,7 @@ class Create extends \Service\Base {
                 ]);
             }
 
-            $user = $query->findOne();
+            $films = $query->findOne();
             $user->setRole('employee');
             $user->setDealer($dealer);
             if ( $subsidiary ) $user->setSubsidiary($subsidiary);
@@ -63,11 +63,11 @@ class Create extends \Service\Base {
             $employee->setDealer($dealer);
             $employee->setSubsidiary($subsidiary);
 
-            $employee->save();
-            $user->save();
+            // $employee->save();
+            // $user->save();
 
             return [
-                'UserID' => $user->getUserID(),
+                'Id' => $films->getId(),
                 'status' => 1
             ];
         } catch (\Engine\X\AcessDenied $e) {

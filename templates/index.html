@@ -6,12 +6,16 @@
     <!--<link rel="stylesheet" href="../css/style.css"> -->
     <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <style>
+    form {display: inline-block; margin: 0.5em;}
+    ul{list-style: none;}
+    </style>
 </head>
 <body>
     <nav>
         <a href="/">Главная</a>
         <a href="/add">Добавить</a>
-        <a href="/delete">Удалить</a>
+        <!-- <a href="/delete">Удалить</a> -->
         <a href="/import">Импорт</a>
     </nav>
     <div class="handler"></div>
@@ -29,7 +33,10 @@
         </form> -->
     <script src="static/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script>
-
+        /**
+         * URL parser
+         * @type {[type]}
+         */
         var parser = document.createElement('a');
         parser.href = document.URL;
 
@@ -42,6 +49,7 @@
         parser.host;     // => "example.com:3000"
 
         var url = parser.pathname;
+        /* End URl parser */
 
         var id ;
 
@@ -98,10 +106,15 @@
                     actorAddImput.setAttribute("name", "actor");
                     actorAddImput.setAttribute("value", "actor");
 
+                var addSubmit = document.createElement("input");
+                    addSubmit.setAttribute("type", "submit");
+                    addSubmit.setAttribute("value", "добавить");
+
                 addForm.appendChild(titleAddImput);
                 addForm.appendChild(yearAddImput);
                 addForm.appendChild(formatAddImput);
                 addForm.appendChild(actorAddImput);
+                addForm.appendChild(addSubmit);
 
                 document.getElementsByTagName("body")[0].appendChild(addForm);
 
@@ -135,34 +148,67 @@
 
                 contentType: "application/json; charset=utf-8",
                 success: function(resultData) {
-                    var films = [];
-                    $.each(resultData, function(key, val) {
 
-                        $.each(val, function(k, value) {
-                            val.push(
-                                "<li id='" + value.Id + "'>"+
-                                    "<form method='post' action='api/films/"+ value.Id+"'>"+
-                                        "<input value='DELETE' name='_METHOD' type='hidden'>" +
-                                        "<input value='удалить' type='submit' class='del-butt' name='submit'>"
-                                        + value.Name +
-                                   "</form>" +
-                               "</li>"
-                               );
-                        });
-                        $("<ul/>", {
-                            "class": "films",
-                            html: val.join("")
-                        }).appendTo("div.a");
-                        films.push("<li id='" + key + "'>" + val + "</li>");
+                        u = /.+[0-9]*/
 
-                    });
-                    $("<ul/>", {
-                        "class": "films-list",
-                        html: flims.join("")
-                    }).appendTo("body");
+                    switch(url) {
+                        case "/":
+                            var films = [];
+                            $.each(resultData, function(key, val) {
 
+                                var fil = [];
 
-                    // console.log(resultData.Films);
+                                $.each(val, function(k, value) {
+                                    fil.push(
+                                        "<li id='" + value.Id + "'>"+
+                                            "<form method='post' action='api/films/"+ value.Id+"'>"+
+                                                "<input value='DELETE' name='_METHOD' type='hidden'>" +
+                                                "<input value='удалить' type='submit' class='del-butt' name='del-submit'>"
+                                                + value.Name +
+                                           "</form>"+
+                                           "<a href='"+value.Id +"'>Info</a>"+
+                                       "</li>"
+                                       );
+                                });
+                                $("<ul/>", {
+                                    "class": "films",
+                                    html: fil.join("")
+                                }).appendTo("div.a");
+                                // films.push("<li id='" + key + "'>" + val + "</li>");
+                            });
+                            // $("<ul/>", {
+                            //     "class": "films-list",
+                            //     html: films.join("")
+                            // }).appendTo("body");
+                            // console.log(resultData.Films);
+                            break;
+                        case "/78":
+                            var films = [];
+                            $.each(resultData, function(key, value) {
+
+                                var fil = [];
+
+                                // $.each(val, function(k, value) {
+                                    films.push(
+                                        "<li id='" + value.Id + "'>"+
+                                            "<form method='post' action='api/films/"+ value.Id+"'>"+
+                                                "<input value='DELETE' name='_METHOD' type='hidden'>" +
+                                                "<input value='удалить' type='submit' class='del-butt' name='del-submit'>"
+                                                + value.Name + value.Year + value.Format+
+                                           "</form>"+
+                                           "<a href='"+value.Id +"'>Info</a>"+
+                                       "</li>"
+                                       );
+                                // });
+
+                                // films.push("<li id='" + key + "'>" + val + "</li>");
+                            });
+                              $("<ul/>", {
+                                    "class": "films",
+                                    html: films.join("")
+                                }).appendTo("div.a");
+
+                   } //End switch
                 },
                 timeout: 120000,
             });

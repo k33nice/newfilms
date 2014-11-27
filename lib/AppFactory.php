@@ -68,7 +68,8 @@ class AppFactory {
             // $app->log->info("Slim-Skeleton '/' route");
 
             // Render index view
-            $app->render('index.html'/*, array('films' => $films)*/);
+            // $app->render('index.html');
+            $app->render('index.html');
         });
 
         self::$slimInstance = $app;

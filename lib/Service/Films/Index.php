@@ -42,8 +42,8 @@ class Index extends \Service\Base {
 
         foreach ($films as $film) {
             $row = [
-                "Id"     => $film->getId(),
-                "Name"   => $film->getName(),
+                "Id"   => $film->getId(),
+                "Name" => $film->getName(),
                 // "Year"   => $film->getYear(),
                 // "Format" => $film->getFormat(),
             ];
@@ -52,7 +52,7 @@ class Index extends \Service\Base {
         }
 
         return [
-            'Films'     => $rows,
+            'Films'      => $rows,
             'TotalCount' => $totalCount,
             'status'     => 1
         ];

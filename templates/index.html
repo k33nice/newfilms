@@ -18,7 +18,7 @@
         <a href="/">Главная</a>
         <a href="/add">Добавить</a>
         <!-- <a href="/delete">Удалить</a> -->
-        <a href="/import">Импорт</a>
+        <a href="/import/">Импорт</a>
     </nav>
     <input type="submit" name="add-request" value="добавить">
     <div id="handler"></div>
@@ -167,11 +167,6 @@
 
         var id ;
 
-        /**
-         *#############################################*
-         *#                 Search form               #*
-         *#############################################*
-         */
             var searchForm = document.createElement("form");
                 searchForm.setAttribute("method", "get");
                 searchForm.setAttribute("action", "/");
@@ -188,18 +183,7 @@
                 searchForm.appendChild(searchSubmit);
 
                 document.getElementsByTagName("div")[0].appendChild(searchForm);
-        /**
-         *#############################################*
-         *#              End Search Form              #*
-         *#############################################*
-         */
 
-
-         /**
-          * ###########################################*
-          *#                  Router                  #*
-          *############################################*
-          */
         switch (url) {
             case "/add":
                 var addForm = document.createElement("form");
@@ -239,24 +223,22 @@
                 document.getElementsByTagName("body")[0].appendChild(addForm);
 
                 break;
-            case "/import":
-                // var deleteForm = document.createElement("form");
-                //     deleteForm.setAttribute("method","post");
-                //     deleteForm.setAttribute("action","api/films/");
+            case "/import/":
+                var importForm = document.createElement("form");
+                    importForm.setAttribute("method","post");
+                    importForm.setAttribute("action","/api/films/import/");
 
-                // var hiddenDeleteInput = document.createElement("input");
-                //     hiddenDeleteInput.setAttribute("type","hidden");
-                //     hiddenDeleteInput.setAttribute("name","_METHOD");
-                //     hiddenDeleteInput.setAttribute("value","DELETE");
+                var importImput = document.createElement("input");
+                    importImput.setAttribute("type","file");
 
-                // var submitDeleteInput = document.createElement("input");
-                //     submitDeleteInput.setAttribute("type","submit");
-                //     submitDeleteInput.setAttribute("value","удалить");
+                var importSubmit = document.createElement("input");
+                    importSubmit.setAttribute("type","submit");
+                    importSubmit.setAttribute("value","import");
 
-                // deleteForm.appendChild(hiddenDeleteInput);
-                // deleteForm.appendChild(submitDeleteInput);
+                importForm.appendChild(importImput);
+                importForm.appendChild(importSubmit);
 
-                // document.getElementsByTagName("body")[0].appendChild(deleteForm);
+                document.getElementsByTagName("body")[0].appendChild(importForm);
 
                 break;
         };

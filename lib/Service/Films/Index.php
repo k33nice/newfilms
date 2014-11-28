@@ -20,7 +20,7 @@ class Index extends \Service\Base {
 
     public function execute($params) {
         $params += [
-            'Search' => '',
+            'search' => '',
 
             'Limit'  => 0,
             'Offset' => 0,
@@ -44,7 +44,7 @@ class Index extends \Service\Base {
             $row = [
                 "Id"     => $film->getId(),
                 "Name"   => $film->getName(),
-                "Year"   => $film->getYear(),
+                // "Year"   => $film->getYear(),
                 // "Format" => $film->getFormat(),
             ];
 

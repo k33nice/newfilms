@@ -56,6 +56,50 @@ class Films extends Base {
             return $self->action("Service\Films\Update")->run($data);
         });
     }
+
+    public function import()
+    {
+        $self = $this;
+
+        $handle = opendir('uploads/');
+        while (false !== ($entry = readdir($handle))) {
+            $content = file('uploads/' . $entry);
+
+            $title = 'Title';
+            $year = 'Release Year';
+            $format = 'Format';
+
+            $act = implode($content);
+            $blocks = explode('Title:', $act);
+
+            foreach ($content as $line) {
+
+                $result = explode(': ', $line, 2);
+
+                switch ($result[0]) {
+                    case $title:
+                        $resultName = $result[1];
+                        continue;
+                    case $year:
+                        $resultYear = $result[1];
+                        continue;
+                    case $format:
+                        $resultFormat = $result[1];
+
+                        $data = [
+                            'Name'   => $resultName,
+                            'Year'   => $resultYear,
+                            'Format' => $resultFormat,
+                        ];
+
+                $this->run(function() use ($self, $data) {
+                    return $self->action("Service\Films\Import")->run($data);
+                });
+
+                }
+            }
+        }
+    }
 }
 
 ?>

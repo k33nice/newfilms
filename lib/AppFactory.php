@@ -52,15 +52,7 @@ class AppFactory {
                 $app->delete('/:Id', array($films, 'delete'))->name('films_delete');
                 $app->post('/:Id', array($films, 'update'))->name('films_update');
                 $app->post('/', array($films, 'create'))->name('films_create');
-            });
-
-            $app->group('/add', function() use ($app) {
-                $add = new \Controller\Add($app);
-                $app->get('/', array($add, 'index'))->name('adds_index');
-                $app->get('/:AddId', array($add, 'show'))->name('adds_show');
-                $app->delete('/:AddId', array($add, 'delete'))->name('adds_delete');
-                $app->post('/:AddId', array($add, 'update'))->name('adds_update');
-                $app->post('/', array($add, 'create'))->name('adds_create');
+                $app->post('/import/', array($films, 'import'))->name('films_import');
             });
         });
 
@@ -78,8 +70,8 @@ class AppFactory {
 
     /**
      * [initPropel description]
-     * @param  [type] $config [description]
-     * @return [type]         [description]
+     *
+     * @param  array $config [description]
      */
     public function initPropel($config) {
         extract($config);

@@ -13,15 +13,15 @@ class AppFactory {
             'templates.path' => __DIR__ . '/../templates'
         ));
 
-        $app->container->singleton('log', function () use ($app) {
-            $log = new \Monolog\Logger('itbox-dealer');
+        // $app->container->singleton('log', function () use ($app) {
+        //     $log = new \Monolog\Logger('itbox-dealer');
 
-            $log->pushHandler(
-                new \Monolog\Handler\StreamHandler( __DIR__ . '/../logs/app.log', \Monolog\Logger::DEBUG)
-            );
+        //     $log->pushHandler(
+        //         new \Monolog\Handler\StreamHandler( __DIR__ . '/../logs/app.log', \Monolog\Logger::DEBUG)
+        //     );
 
-            return $log;
-        });
+        //     return $log;
+        // });
 
         // Prepare view
         $app->view(new \Slim\Views\Twig());

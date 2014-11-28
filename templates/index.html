@@ -122,22 +122,22 @@
     $("input[name=add-request]").click(function() {
         var addForm = document.createElement("form");
                     addForm.setAttribute("method", "post");
-                    addForm.setAttribute("action", "/");
+                    addForm.setAttribute("action", "/api/films/");
                     addForm.setAttribute("id", "add");
 
                 var titleAddImput = document.createElement("input");
                     titleAddImput.setAttribute("type", "text");
-                    titleAddImput.setAttribute("name", "title");
+                    titleAddImput.setAttribute("name", "Name");
                     titleAddImput.setAttribute("value", "title");
 
                 var yearAddImput = document.createElement("input");
                     yearAddImput.setAttribute("type", "text");
-                    yearAddImput.setAttribute("name", "year");
+                    yearAddImput.setAttribute("name", "Year");
                     yearAddImput.setAttribute("value", "year");
 
                 var formatAddImput = document.createElement("input");
                     formatAddImput.setAttribute("type", "text");
-                    formatAddImput.setAttribute("name", "format");
+                    formatAddImput.setAttribute("name", "Format");
                     formatAddImput.setAttribute("value", "format");
 
                 // var actorAddImput = document.createElement("input");

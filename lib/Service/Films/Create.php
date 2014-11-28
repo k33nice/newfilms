@@ -32,7 +32,7 @@ class Create extends \Service\Base {
             // $user->save();
 
             return [
-                'Id' => $films->getId(),
+                'Id' => $query,
                 'status' => 1
             ];
         } catch (\Engine\X\AcessDenied $e) {

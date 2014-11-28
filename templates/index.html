@@ -7,9 +7,10 @@
     <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <style>
-    form {display: inline-block; margin: 0.5em;}
-    ul{list-style: none;}
-    span{margin: 0 0.6em;}
+        body{width: 50%;margin: 0 auto;}
+        form {display: inline-block; margin: 0.5em;}
+        ul{list-style: none;}
+        span{margin: 0 0.6em;}
     </style>
 </head>
 <body>
@@ -19,21 +20,135 @@
         <!-- <a href="/delete">Удалить</a> -->
         <a href="/import">Импорт</a>
     </nav>
-    <div class="handler"></div>
+    <input type="submit" name="add-request" value="добавить">
+    <div id="handler"></div>
     <div class="a"></div>
-    {% block content %} {% endblock %}
-<!--         <form action="/main/search" method="post">
-            <label for="search-title"></label>
-            <input type="text" name="search-title">
-            <input type="submit" name="submit" value="Поиск">
-        </form>
-        <form action="/main/search" method="post">
-            <label for="search-actor"></label>
-            <input type="text" name="search-actor">
-            <input type="submit" name="submit-actor" value="Поиск">
-        </form> -->
+    <p></p>
     <script src="static/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script>
+
+    jQuery(document).ready(function($) {
+
+        // $("#add").submit(function(event) {
+        //     event.preventDefault();
+        //     $.ajax({
+        //         url: '/api/films',
+        //         type: 'post',
+        //         // data: $("#put").serializeArray(),
+        //         success: function(data) {
+        //             // $("#results").html(data);
+        //         }
+        //     });
+        // });
+
+
+
+        $.ajax({
+                url: "/api/films"+url,
+                type: "GET",
+
+                contentType: "application/json; charset=utf-8",
+                success: function(resultData) {
+
+                        var u = new RegExp("/\d*");
+                        if(u.test(url)===false) {
+                            delete this.url;
+                        };
+
+                    switch(url) {
+                        case "/":
+                            var films = [];
+                            $.each(resultData, function(key, val) {
+
+                                var fil = [];
+
+                                $.each(val, function(k, value) {
+                                    fil.push(
+                                        "<li id='" + value.Id + "'>"+
+                                            "<form method='post' action='api/films/"+ value.Id+"'>"+
+                                                "<input value='DELETE' name='_METHOD' type='hidden'>" +
+                                                "<input value='удалить' type='submit' class='del-butt' name='del-submit'>"
+                                                + value.Name +
+                                           "</form>"+
+                                           "<a href='"+value.Id +"'>Info</a>"+
+                                       "</li>"
+                                       );
+                                });
+                                $("<ul/>", {
+                                    "class": "films",
+                                    html: fil.join("")
+                                }).appendTo("div.a");
+                            });
+                            break;
+                        case url:
+                            var films = [];
+                            $.each(resultData, function(key, value) {
+
+                                    films.push(
+                                        "<li id='" + value.Id + "'>"+
+                                            "<form method='post' action='api/films/"+ value.Id+"'>"+
+                                                "<input value='DELETE' name='_METHOD' type='hidden'>" +
+                                                "<input value='удалить' type='submit' class='del-butt' name='del-submit'>"
+                                                + "<span>"+value.Name+"</span><span>"+value.Year+"</span><span>"+value.Format+"</span>"+
+                                           "</form>"+
+                                       "</li>"
+                                       );
+
+                            });
+                              $("<ul/>", {
+                                    "class": "films",
+                                    html: films.join("")
+                                }).appendTo("div.a");
+                              break;
+
+                   } //End switch
+                },
+                timeout: 120000,
+            });
+
+
+    });
+
+    $("input[name=add-request]").click(function() {
+        var addForm = document.createElement("form");
+                    addForm.setAttribute("method", "post");
+                    addForm.setAttribute("action", "/");
+                    addForm.setAttribute("id", "add");
+
+                var titleAddImput = document.createElement("input");
+                    titleAddImput.setAttribute("type", "text");
+                    titleAddImput.setAttribute("name", "title");
+                    titleAddImput.setAttribute("value", "title");
+
+                var yearAddImput = document.createElement("input");
+                    yearAddImput.setAttribute("type", "text");
+                    yearAddImput.setAttribute("name", "year");
+                    yearAddImput.setAttribute("value", "year");
+
+                var formatAddImput = document.createElement("input");
+                    formatAddImput.setAttribute("type", "text");
+                    formatAddImput.setAttribute("name", "format");
+                    formatAddImput.setAttribute("value", "format");
+
+                // var actorAddImput = document.createElement("input");
+                //     actorAddImput.setAttribute("type", "text");
+                //     actorAddImput.setAttribute("name", "actor");
+                //     actorAddImput.setAttribute("value", "actor");
+
+                var addSubmit = document.createElement("input");
+                    addSubmit.setAttribute("type", "submit");
+                    addSubmit.setAttribute("value", "добавить");
+
+                addForm.appendChild(titleAddImput);
+                addForm.appendChild(yearAddImput);
+                addForm.appendChild(formatAddImput);
+                // addForm.appendChild(actorAddImput);
+                addForm.appendChild(addSubmit);
+
+                document.getElementsByTagName("div")[0].appendChild(addForm);
+
+    });
+
         /**
          * URL parser
          * @type {[type]}
@@ -59,28 +174,34 @@
          *#                 Search form               #*
          *#############################################*
          */
-        var searchForm = document.createElement("form");
-            searchForm.setAttribute("method", "get");
-            searchForm.setAttribute("action", "api/films/");
+            var searchForm = document.createElement("form");
+                searchForm.setAttribute("method", "get");
+                searchForm.setAttribute("action", "/");
 
-        var searchInput = document.createElement("input");
-            searchInput.setAttribute("type", "text");
-            searchInput.setAttribute("name", "search-input");
+            var searchInput = document.createElement("input");
+                searchInput.setAttribute("type", "text");
+                searchInput.setAttribute("name", "search");
 
-        var searchSubmit = document.createElement("input");
-            searchSubmit.setAttribute("type", "submit");
-            searchSubmit.setAttribute("value", "поиск");
+            var searchSubmit = document.createElement("input");
+                searchSubmit.setAttribute("type", "submit");
+                searchSubmit.setAttribute("value", "поиск");
 
-            searchForm.appendChild(searchInput);
-            searchForm.appendChild(searchSubmit);
+                searchForm.appendChild(searchInput);
+                searchForm.appendChild(searchSubmit);
 
-            document.getElementsByTagName("div")[0].appendChild(searchForm);
+                document.getElementsByTagName("div")[0].appendChild(searchForm);
         /**
          *#############################################*
          *#              End Search Form              #*
          *#############################################*
          */
 
+
+         /**
+          * ###########################################*
+          *#                  Router                  #*
+          *############################################*
+          */
         switch (url) {
             case "/add":
                 var addForm = document.createElement("form");
@@ -120,7 +241,7 @@
                 document.getElementsByTagName("body")[0].appendChild(addForm);
 
                 break;
-            case "/delete":
+            case "/import":
                 // var deleteForm = document.createElement("form");
                 //     deleteForm.setAttribute("method","post");
                 //     deleteForm.setAttribute("action","api/films/");
@@ -142,83 +263,78 @@
                 break;
         };
 
+            // jQuery.ajax({
+            //     url: "/api/films"+url,
+            //     type: "GET",
 
-            jQuery.ajax({
-                url: "/api/films"+url,
-                type: "GET",
+            //     contentType: "application/json; charset=utf-8",
+            //     success: function(resultData) {
 
-                contentType: "application/json; charset=utf-8",
-                success: function(resultData) {
+            //             var u = new RegExp("/\d*");
+            //             if(u.test(url)===false) {
+            //                 delete this.url;
+            //             };
 
-                        var u = new RegExp("/\d*");
-                        if(u.test(url)===false) {
-                            delete this.url;
-                        };
+            //         switch(url) {
+            //             case "/":
+            //                 var films = [];
+            //                 $.each(resultData, function(key, val) {
 
+            //                     var fil = [];
 
+            //                     $.each(val, function(k, value) {
+            //                         fil.push(
+            //                             "<li id='" + value.Id + "'>"+
+            //                                 "<form method='post' action='api/films/"+ value.Id+"'>"+
+            //                                     "<input value='DELETE' name='_METHOD' type='hidden'>" +
+            //                                     "<input value='удалить' type='submit' class='del-butt' name='del-submit'>"
+            //                                     + value.Name +
+            //                                "</form>"+
+            //                                "<a href='"+value.Id +"'>Info</a>"+
+            //                            "</li>"
+            //                            );
+            //                     });
+            //                     $("<ul/>", {
+            //                         "class": "films",
+            //                         html: fil.join("")
+            //                     }).appendTo("div.a");
+            //                 });
+            //                 break;
+            //             case url:
+            //                 var films = [];
+            //                 $.each(resultData, function(key, value) {
 
-                    switch(url) {
-                        case "/":
-                            var films = [];
-                            $.each(resultData, function(key, val) {
+            //                         films.push(
+            //                             "<li id='" + value.Id + "'>"+
+            //                                 "<form method='post' action='api/films/"+ value.Id+"'>"+
+            //                                     "<input value='DELETE' name='_METHOD' type='hidden'>" +
+            //                                     "<input value='удалить' type='submit' class='del-butt' name='del-submit'>"
+            //                                     + "<span>"+value.Name+"</span><span>"+value.Year+"</span><span>"+value.Format+"</span>"+
+            //                                "</form>"+
+            //                            "</li>"
+            //                            );
 
-                                var fil = [];
+            //                 });
+            //                   $("<ul/>", {
+            //                         "class": "films",
+            //                         html: films.join("")
+            //                     }).appendTo("div.a");
+            //                   break;
 
-                                $.each(val, function(k, value) {
-                                    fil.push(
-                                        "<li id='" + value.Id + "'>"+
-                                            "<form method='post' action='api/films/"+ value.Id+"'>"+
-                                                "<input value='DELETE' name='_METHOD' type='hidden'>" +
-                                                "<input value='удалить' type='submit' class='del-butt' name='del-submit'>"
-                                                + value.Name +
-                                           "</form>"+
-                                           "<a href='"+value.Id +"'>Info</a>"+
-                                       "</li>"
-                                       );
-                                });
-                                $("<ul/>", {
-                                    "class": "films",
-                                    html: fil.join("")
-                                }).appendTo("div.a");
-                                // films.push("<li id='" + key + "'>" + val + "</li>");
-                            });
-                            // $("<ul/>", {
-                            //     "class": "films-list",
-                            //     html: films.join("")
-                            // }).appendTo("body");
-                            // console.log(resultData.Films);
-                            break;
-                        case url:
-                            var films = [];
-                            $.each(resultData, function(key, value) {
-
-                                // var fil = [];
-
-                                // $.each(val, function(k, value) {
-                                    films.push(
-                                        "<li id='" + value.Id + "'>"+
-                                            "<form method='post' action='api/films/"+ value.Id+"'>"+
-                                                "<input value='DELETE' name='_METHOD' type='hidden'>" +
-                                                "<input value='удалить' type='submit' class='del-butt' name='del-submit'>"
-                                                + "<span>"+value.Name+"</span><span>"+value.Year+"</span><span>"+value.Format+"</span>"+
-                                           "</form>"+
-                                       "</li>"
-                                       );
-                                // });
-
-                                // films.push("<li id='" + key + "'>" + val + "</li>");
-                            });
-                              $("<ul/>", {
-                                    "class": "films",
-                                    html: films.join("")
-                                }).appendTo("div.a");
-                              break;
-
-                   } //End switch
-                },
-                timeout: 120000,
-            });
-
+            //        } //End switch
+            //     },
+            //     timeout: 120000,
+            // });
+  //   $( "input[name=search]" )
+  // .keyup(function() {
+  //   var value = $( this ).val();
+  //   $( "p" ).text( value );
+  // })
+  // .keyup();
+//   $('input[type=text]').click(function() {
+//     this.value = '';
+// });
+// });
     </script>
 </body>
 </html>

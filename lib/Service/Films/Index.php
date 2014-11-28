@@ -6,7 +6,7 @@ class Index extends \Service\Base {
 
     public function validate($params) {
         $rules = [
-            // 'Search'    => [ 'max_length' => 100 ],
+            'search'    => [ 'max_length' => 100 ],
 
             'Limit'     => [ 'integer', ['min_number' => 0] ],
             'Offset'    => [ 'integer', ['min_number' => 0] ],
@@ -34,6 +34,7 @@ class Index extends \Service\Base {
         $totalCount = $query->count();
         $films =      $query->limit(  $params['Limit']  )
                             ->offset( $params['Offset'] )
+                            ->filterByName($params['search'] . '%')
                             ->orderByName()
                             ->find();
 

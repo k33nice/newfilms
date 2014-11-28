@@ -47,7 +47,7 @@ class AppFactory {
         $app->group('/api', function () use ($app) {
             $app->group('/films', function() use ($app) {
                 $films = new \Controller\Films($app);
-                $app->get('/', array($films, 'index'))->name(films_index);
+                $app->get('/', array($films, 'index'))->name('films_index');
                 $app->get('/:Id', array($films, 'show'))->name('films_show');
                 $app->delete('/:Id', array($films, 'delete'))->name('films_delete');
                 $app->post('/:Id', array($films, 'update'))->name('films_update');

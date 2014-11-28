@@ -26,6 +26,23 @@
     <p></p>
     <script src="static/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script>
+        /**
+         * URL parser
+         * @type {[type]}
+         */
+        var parser = document.createElement('a');
+        parser.href = document.URL;
+
+        parser.protocol; // => "http:"
+        parser.hostname; // => "example.com"
+        parser.port;     // => "3000"
+        parser.pathname; // => "/pathname/"
+        parser.search;   // => "?search=test"
+        parser.hash;     // => "#hash"
+        parser.host;     // => "example.com:3000"
+
+        var url = parser.pathname;
+        /* End URl parser */
 
     jQuery(document).ready(function($) {
 
@@ -40,8 +57,6 @@
         //         }
         //     });
         // });
-
-
 
         $.ajax({
                 url: "/api/films"+url,
@@ -83,30 +98,25 @@
                         case url:
                             var films = [];
                             $.each(resultData, function(key, value) {
-
-                                    films.push(
-                                        "<li id='" + value.Id + "'>"+
-                                            "<form method='post' action='api/films/"+ value.Id+"'>"+
-                                                "<input value='DELETE' name='_METHOD' type='hidden'>" +
-                                                "<input value='удалить' type='submit' class='del-butt' name='del-submit'>"
-                                                + "<span>"+value.Name+"</span><span>"+value.Year+"</span><span>"+value.Format+"</span>"+
-                                           "</form>"+
-                                       "</li>"
-                                       );
-
+                                films.push(
+                                    "<li id='" + value.Id + "'>"+
+                                        "<form method='post' action='api/films/"+ value.Id+"'>"+
+                                            "<input value='DELETE' name='_METHOD' type='hidden'>" +
+                                            "<input value='удалить' type='submit' class='del-butt' name='del-submit'>"
+                                            + "<span>"+value.Name+"</span><span>"+value.Year+"</span><span>"+value.Format+"</span>"+
+                                       "</form>"+
+                                   "</li>"
+                               );
                             });
                               $("<ul/>", {
                                     "class": "films",
                                     html: films.join("")
                                 }).appendTo("div.a");
-                              break;
-
+                            break;
                    } //End switch
                 },
                 timeout: 120000,
             });
-
-
     });
 
     $("input[name=add-request]").click(function() {
@@ -148,24 +158,6 @@
                 document.getElementsByTagName("div")[0].appendChild(addForm);
 
     });
-
-        /**
-         * URL parser
-         * @type {[type]}
-         */
-        var parser = document.createElement('a');
-        parser.href = document.URL;
-
-        parser.protocol; // => "http:"
-        parser.hostname; // => "example.com"
-        parser.port;     // => "3000"
-        parser.pathname; // => "/pathname/"
-        parser.search;   // => "?search=test"
-        parser.hash;     // => "#hash"
-        parser.host;     // => "example.com:3000"
-
-        var url = parser.pathname;
-        /* End URl parser */
 
         var id ;
 

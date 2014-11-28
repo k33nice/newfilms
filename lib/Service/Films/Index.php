@@ -34,7 +34,7 @@ class Index extends \Service\Base {
         $totalCount = $query->count();
         $films =      $query->limit(  $params['Limit']  )
                             ->offset( $params['Offset'] )
-                            ->filterByName($params['search'] . '%')
+                            // ->filterByName($params['search'] . '%')
                             ->orderByName()
                             ->find();
 

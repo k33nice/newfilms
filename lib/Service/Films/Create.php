@@ -6,9 +6,9 @@ class Create extends \Service\Base {
 
     public function validate($params) {
         $rules = [
-            'Name'   => [ 'not_empty' ],
-            'Year'   => [ 'not_empty'/*, 'positive_integer', number_between => [1900, 2020], 'length_equal' => 4*/],
-            'Format' => [ 'not_empty'/*'one_of' => ['VHS', 'DVD', 'BluRay'] */],
+            'Name'   => [ 'required', 'not_empty' ],
+            'Year'   => [ 'required', 'not_empty'/*, 'positive_integer', number_between => [1900, 2020], 'length_equal' => 4*/],
+            'Format' => [ 'required', 'not_empty'/*'one_of' => ['VHS', 'DVD', 'BluRay'] */],
         ];
 
         return \Service\Validator::validate($params, $rules);
@@ -16,23 +16,15 @@ class Create extends \Service\Base {
 
     public function execute($params) {
         try {
-            // $params += ['SubsidiaryID' => ''];
 
-            $query = \Engine\FilmsQuery::create()->save();
-
-            if ($query->count() == 0) {
-                throw new \Service\X([
-                    'type'    => 'NOT_FOUND',
-                    'fields'  => [ 'Email' => 'NOT_FOUND' ],
-                    'message' => 'Cannot find client with email = '.$params['Email']
-                ]);
-            }
-
-            // $employee->save();
-            // $user->save();
+            $film = new \Engine\Films();
+            $film->setName($params['Name']);
+            $film->setYear($params['Year']);
+            $film->setFormat($params['Format']);
+            $film->save();
 
             return [
-                'Id' => $query,
+                'Id' => $film->getId(),
                 'status' => 1
             ];
         } catch (\Engine\X\AcessDenied $e) {

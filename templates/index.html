@@ -157,6 +157,12 @@
 
                 document.getElementsByTagName("div")[0].appendChild(addForm);
 
+                /*Clear inputs*/
+                $('input:text').click(
+                function(){
+                    $(this).val('');
+                });
+
     });
 
         var id ;

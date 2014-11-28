@@ -16,13 +16,14 @@
 <body>
     <nav>
         <a href="/">Главная</a>
-        <a href="/add">Добавить</a>
+        <!-- <a href="/add">Добавить</a> -->
         <!-- <a href="/delete">Удалить</a> -->
         <a href="/import/">Импорт</a>
     </nav>
     <input type="submit" name="add-request" value="добавить">
     <div id="handler"></div>
     <div class="a"></div>
+    <div id="message"></div>
     <p></p>
     <script src="static/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script>
@@ -80,7 +81,7 @@
                                 $.each(val, function(k, value) {
                                     fil.push(
                                         "<li id='" + value.Id + "'>"+
-                                            "<form method='post' action='api/films/"+ value.Id+"'>"+
+                                            "<form method='post' class='delete' action='/api/films/"+value.Id+"'>"+
                                                 "<input value='DELETE' name='_METHOD' type='hidden'>" +
                                                 "<input value='удалить' type='submit' class='del-butt' name='del-submit'>"
                                                 + value.Name +
@@ -88,6 +89,16 @@
                                            "<a href='"+value.Id +"'>Info</a>"+
                                        "</li>"
                                        );
+                                    $(".delete").submit(function(event) {
+                                        event.preventDefault();
+                                            $.ajax({
+                                            url: '/api/films/'+vlue.Id,
+                                            type: 'post',
+                                            success: function() {
+                                                $("#message").text('film deleted');
+                                            }
+                                        });
+                                    });
                                 });
                                 $("<ul/>", {
                                     "class": "films",
@@ -104,6 +115,7 @@
                                             "<input value='DELETE' name='_METHOD' type='hidden'>" +
                                             "<input value='удалить' type='submit' class='del-butt' name='del-submit'>"
                                             + "<span>"+value.Name+"</span><span>"+value.Year+"</span><span>"+value.Format+"</span>"+
+                                            "<span>"+value.Stars+"</span>"+
                                        "</form>"+
                                    "</li>"
                                );
@@ -113,6 +125,7 @@
                                     html: films.join("")
                                 }).appendTo("div.a");
                             break;
+
                    } //End switch
                 },
                 timeout: 120000,
@@ -165,6 +178,8 @@
 
     });
 
+
+
         var id ;
 
             var searchForm = document.createElement("form");
@@ -185,48 +200,11 @@
                 document.getElementsByTagName("div")[0].appendChild(searchForm);
 
         switch (url) {
-            case "/add":
-                var addForm = document.createElement("form");
-                    addForm.setAttribute("method", "post");
-                    addForm.setAttribute("action", "api/films/");
-
-                var titleAddImput = document.createElement("input");
-                    titleAddImput.setAttribute("type", "text");
-                    titleAddImput.setAttribute("name", "title");
-                    titleAddImput.setAttribute("value", "title");
-
-                var yearAddImput = document.createElement("input");
-                    yearAddImput.setAttribute("type", "text");
-                    yearAddImput.setAttribute("name", "year");
-                    yearAddImput.setAttribute("value", "year");
-
-                var formatAddImput = document.createElement("input");
-                    formatAddImput.setAttribute("type", "text");
-                    formatAddImput.setAttribute("name", "format");
-                    formatAddImput.setAttribute("value", "format");
-
-                var actorAddImput = document.createElement("input");
-                    actorAddImput.setAttribute("type", "text");
-                    actorAddImput.setAttribute("name", "actor");
-                    actorAddImput.setAttribute("value", "actor");
-
-                var addSubmit = document.createElement("input");
-                    addSubmit.setAttribute("type", "submit");
-                    addSubmit.setAttribute("value", "добавить");
-
-                addForm.appendChild(titleAddImput);
-                addForm.appendChild(yearAddImput);
-                addForm.appendChild(formatAddImput);
-                addForm.appendChild(actorAddImput);
-                addForm.appendChild(addSubmit);
-
-                document.getElementsByTagName("body")[0].appendChild(addForm);
-
-                break;
             case "/import/":
                 var importForm = document.createElement("form");
                     importForm.setAttribute("method","post");
-                    importForm.setAttribute("action","/api/films/import/");
+                    importForm.setAttribute("action","/import/");
+                    importForm.setAttribute("id", "import");
 
                 var importImput = document.createElement("input");
                     importImput.setAttribute("type","file");
@@ -243,78 +221,17 @@
                 break;
         };
 
-            // jQuery.ajax({
-            //     url: "/api/films"+url,
-            //     type: "GET",
+    $("#import").submit(function(event) {
+        event.preventDefault();
+        $.ajax({
+            url: '/api/films/import/',
+            type: 'post',
+            success: function() {
+                $("#message").text('import success');
+            }
+        });
+    });
 
-            //     contentType: "application/json; charset=utf-8",
-            //     success: function(resultData) {
-
-            //             var u = new RegExp("/\d*");
-            //             if(u.test(url)===false) {
-            //                 delete this.url;
-            //             };
-
-            //         switch(url) {
-            //             case "/":
-            //                 var films = [];
-            //                 $.each(resultData, function(key, val) {
-
-            //                     var fil = [];
-
-            //                     $.each(val, function(k, value) {
-            //                         fil.push(
-            //                             "<li id='" + value.Id + "'>"+
-            //                                 "<form method='post' action='api/films/"+ value.Id+"'>"+
-            //                                     "<input value='DELETE' name='_METHOD' type='hidden'>" +
-            //                                     "<input value='удалить' type='submit' class='del-butt' name='del-submit'>"
-            //                                     + value.Name +
-            //                                "</form>"+
-            //                                "<a href='"+value.Id +"'>Info</a>"+
-            //                            "</li>"
-            //                            );
-            //                     });
-            //                     $("<ul/>", {
-            //                         "class": "films",
-            //                         html: fil.join("")
-            //                     }).appendTo("div.a");
-            //                 });
-            //                 break;
-            //             case url:
-            //                 var films = [];
-            //                 $.each(resultData, function(key, value) {
-
-            //                         films.push(
-            //                             "<li id='" + value.Id + "'>"+
-            //                                 "<form method='post' action='api/films/"+ value.Id+"'>"+
-            //                                     "<input value='DELETE' name='_METHOD' type='hidden'>" +
-            //                                     "<input value='удалить' type='submit' class='del-butt' name='del-submit'>"
-            //                                     + "<span>"+value.Name+"</span><span>"+value.Year+"</span><span>"+value.Format+"</span>"+
-            //                                "</form>"+
-            //                            "</li>"
-            //                            );
-
-            //                 });
-            //                   $("<ul/>", {
-            //                         "class": "films",
-            //                         html: films.join("")
-            //                     }).appendTo("div.a");
-            //                   break;
-
-            //        } //End switch
-            //     },
-            //     timeout: 120000,
-            // });
-  //   $( "input[name=search]" )
-  // .keyup(function() {
-  //   var value = $( this ).val();
-  //   $( "p" ).text( value );
-  // })
-  // .keyup();
-//   $('input[type=text]').click(function() {
-//     this.value = '';
-// });
-// });
     </script>
 </body>
 </html>

@@ -17,7 +17,32 @@ class Show extends \Service\Base {
     {
         try {
             $film = \Engine\FilmsQuery::create()
-                ->findOneById($params['Id']);
+                ->filterById($params['Id'])
+                ->useActorsQuery()
+                    ->filterByFilmId($params['Id'])
+                ->endUse()
+                ->findOne();
+
+            $actors = \Engine\ActorsQuery::create()
+                ->findByFilmId($params['Id']);
+
+            $array = [];
+
+            foreach ($actors as $actor) {
+                $arr = [
+                    "ActorName"    => $actor->getName(),
+                    "ActorSurname" => $actor->getSurname(),
+                ];
+
+                array_push($array, $arr);
+            }
+
+            $starName = '';
+            foreach($array as $stars) {
+                $starName .= $stars['ActorName'] . ' ' . $stars['ActorSurname'] . ', ';
+            }
+            $starName = rtrim($starName, ', ');
+
 
             if (!$film) {
                 throw new \Service\X([
@@ -32,6 +57,7 @@ class Show extends \Service\Base {
                 "Name"   => $film->getName(),
                 "Year"   => $film->getYear(),
                 "Format" => $film->getFormat(),
+                "Stars"  => $starName,
             ];
 
             return [

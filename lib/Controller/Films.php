@@ -92,9 +92,9 @@ class Films extends Base {
                             'Format' => $resultFormat,
                         ];
 
-                $this->run(function() use ($self, $data) {
-                    return $self->action("Service\Films\Import")->run($data);
-                });
+                        $self->action("Service\Films\Import")->run($data);
+
+                        break;
 
                 }
             }

@@ -146,12 +146,12 @@ class Films extends Base {
                             $resultSurname = $star[1];
 
                             $data = [
-                                'ActorName'    => $resultName,
-                                'ActorSurname' => $resultSurname,
+                                'Name'    => $resultName,
+                                'Surname' => $resultSurname,
                                 'FilmId'       => $resultFilmId,
                             ];
 
-                            $self->action("Service\Films\ImportActor")->run($data);
+                            $self->action("Service\Films\ImportActors")->run($data);
                         }
 
                     }

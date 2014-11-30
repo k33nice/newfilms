@@ -6,9 +6,9 @@ class CreateActors extends \Service\Base {
 
     public function validate($params) {
         $rules = [
-            'Name'   => [ 'required', 'not_empty' ],
+            'Name'    => [ 'required', 'not_empty' ],
             'Surname' => ['required'],
-            'FilmId' => ['required', 'not_empty']
+            'FilmId'  => ['required', 'not_empty']
         ];
 
         return \Service\Validator::validate($params, $rules);

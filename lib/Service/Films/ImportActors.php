@@ -6,9 +6,9 @@ class ImportActors extends \Service\Base {
 
     public function validate($params) {
         $rules = [
-            'Name'   => [ 'required', 'not_empty' ],
-            'Surname'   => [ 'required', 'not_empty'/*, 'positive_integer', number_between => [1900, 2020], 'length_equal' => 4*/],
-            'FilmId' => [ 'required', 'not_empty'/*'one_of' => ['VHS', 'DVD', 'BluRay'] */],
+            'Name'    => [ 'required', 'not_empty' ],
+            'Surname' => [ 'required', 'not_empty' ],
+            'FilmId'  => [ 'required', 'not_empty' ],
         ];
 
         return \Service\Validator::validate($params, $rules);

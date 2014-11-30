@@ -219,22 +219,44 @@
 
         switch (url) {
             case "/import/":
+                var uploadForm = document.createElement("form");
+                    uploadForm.setAttribute("method","post");
+                    uploadForm.setAttribute("action","../upload.php");
+                    uploadForm.setAttribute("id", "upload");
+                    uploadForm.setAttribute("enctype", "multipart/form-data");
+
+                var uploadImput = document.createElement("input");
+                    uploadImput.setAttribute("type","file");
+                    uploadImput.setAttribute("name","file");
+
+                var uploadSubmit = document.createElement("input");
+                    uploadSubmit.setAttribute("type","submit");
+                    uploadSubmit.setAttribute("value","upload");
+
+
+
+
+
                 var importForm = document.createElement("form");
                     importForm.setAttribute("method","post");
                     importForm.setAttribute("action","/import/");
                     importForm.setAttribute("id", "import");
 
-                var importImput = document.createElement("input");
-                    importImput.setAttribute("type","file");
+                // var importImput = document.createElement("input");
+                //     importImput.setAttribute("type","file");
 
                 var importSubmit = document.createElement("input");
                     importSubmit.setAttribute("type","submit");
                     importSubmit.setAttribute("value","import");
 
-                importForm.appendChild(importImput);
+                // importForm.appendChild(importImput);
                 importForm.appendChild(importSubmit);
+                uploadForm.appendChild(uploadImput);
+                uploadForm.appendChild(uploadSubmit);
 
                 document.getElementsByTagName("body")[0].appendChild(importForm);
+                document.getElementsByTagName("body")[0].appendChild(uploadForm);
+
 
                 break;
         };

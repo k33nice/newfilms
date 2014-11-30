@@ -93,9 +93,10 @@
                                         event.preventDefault();
                                             $.ajax({
                                             url: '/api/films/'+vlue.Id,
-                                            type: 'post',
+                                            type: 'delete',
                                             success: function() {
-                                                $("#message").text('film deleted');
+                                                // $("#message").text('film deleted');
+                                                window.loocation.href = "http://google.com";
                                             }
                                         });
                                     });
@@ -132,11 +133,31 @@
             });
     });
 
+    /** Adding new fields for actors*/
+    // $(document).ready(function() {
+    //     var max_fields      = 10; //maximum input boxes allowed
+    //     var wrapper         = $(".input_fields_wrap"); //Fields wrapper
+    //     var add_button      = $(".add_field_button"); //Add button ID
+
+    //     var x = 1; //initlal text box count
+    //     $(add_button).click(function(e){ //on add input button click
+    //         e.preventDefault();
+    //         if(x < max_fields){ //max input box allowed
+    //             x++; //text box increment
+    //             $(wrapper).append('<div><input type="text" name="mytext[]"/><a href="#" class="remove_field">Remove</a></div>'); //add input box
+    //         }
+    //     });
+
+    //     $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
+    //         e.preventDefault(); $(this).parent('div').remove(); x--;
+    //     })
+    // });
+
     $("input[name=add-request]").click(function() {
         var addForm = document.createElement("form");
                     addForm.setAttribute("method", "post");
                     addForm.setAttribute("action", "/api/films/");
-                    addForm.setAttribute("id", "add");
+                    addForm.setAttribute("class", "add");
 
                 var titleAddImput = document.createElement("input");
                     titleAddImput.setAttribute("type", "text");
@@ -153,10 +174,10 @@
                     formatAddImput.setAttribute("name", "Format");
                     formatAddImput.setAttribute("value", "format");
 
-                // var actorAddImput = document.createElement("input");
-                //     actorAddImput.setAttribute("type", "text");
-                //     actorAddImput.setAttribute("name", "actor");
-                //     actorAddImput.setAttribute("value", "actor");
+                var actorNameAddImput = document.createElement("input");
+                    actorNameAddImput.setAttribute("type", "text");
+                    actorNameAddImput.setAttribute("name", "ActorName");
+                    actorNameAddImput.setAttribute("value", "name");
 
                 var addSubmit = document.createElement("input");
                     addSubmit.setAttribute("type", "submit");
@@ -165,7 +186,7 @@
                 addForm.appendChild(titleAddImput);
                 addForm.appendChild(yearAddImput);
                 addForm.appendChild(formatAddImput);
-                // addForm.appendChild(actorAddImput);
+                addForm.appendChild(actorNameAddImput);
                 addForm.appendChild(addSubmit);
 
                 document.getElementsByTagName("div")[0].appendChild(addForm);
@@ -177,9 +198,6 @@
                 });
 
     });
-
-
-
         var id ;
 
             var searchForm = document.createElement("form");
@@ -232,6 +250,18 @@
         });
     });
 
+    $(".add").submit(function(event) {
+        event.preventDefault();
+        $.ajax({
+            url: '/api/films/',
+            type: 'post',
+            success: function() {
+                $("#message").text('import success');
+            }
+        });
+    });
+
     </script>
+    <!-- <script></script> -->
 </body>
 </html>

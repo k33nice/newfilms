@@ -40,9 +40,57 @@ class Films extends Base {
         $self = $this;
         $data = $self->request()->params();
 
-        $this->run(function() use ($self, $data) {
-            return $self->action("Service\Films\Create")->run($data);
-        });
+        $self->action("Service\Films\Create")->run($data);
+
+        $actors = $data['ActorName'];
+
+        $idArray = \Engine\FilmsQuery::create()->find();
+        $idArr = array();
+
+        foreach ($idArray as $film) {
+            $row = [
+                "Id" => $film->getId(),
+            ];
+            array_push($idArr, $row);
+        }
+
+
+
+        var_dump($idArr);
+
+        $id = array_pop($idArr);
+        $id = $id['Id'];
+
+        $actorsArr = explode(', ', $actors);
+
+
+        foreach ($actorsArr as $actor) {
+            //Получаем отдельно имя и фамилию для каждого актера.
+            $actor = explode(' ', $actor, 2);
+            $actorName = $actor[0];
+            if (!empty($actor[1])) {
+                $actorSurname = $actor[1];
+            } else {
+                $actorSurname = 'no';
+            }
+            // $actorSurname = 'HUILO';
+
+
+            $data = [
+                'Name' => $actorName,
+                'Surname' => $actorSurname,
+                'FilmId' => $id,
+            ];
+            var_dump($data);
+
+            $self->action("Service\Films\CreateActors")->run($data);
+
+        }
+
+
+        // $this->run(function() use ($self, $data) {
+        //     return $self->action("Service\Films\Create")->run($data);
+        // });
     }
 
     public function update($Id)
@@ -96,7 +144,6 @@ class Films extends Base {
                             'Name'   => $resultName,
                             'Year'   => $resultYear,
                             'Format' => $resultFormat,
-                            'ActorName' => $aName,
                         ];
 
                         $self->action("Service\Films\Import")->run($data);

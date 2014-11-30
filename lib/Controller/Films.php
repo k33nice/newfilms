@@ -145,10 +145,14 @@ class Films extends Base {
                             $resultName = $star[0];
                             $resultSurname = $star[1];
 
+                            $resultName = trim($resultName);
+                            $resultSurname = trim($resultSurname);
+                            $resultFilmId = trim($resultFilmId);
+
                             $data = [
                                 'Name'    => $resultName,
                                 'Surname' => $resultSurname,
-                                'FilmId'       => $resultFilmId,
+                                'FilmId'  => $resultFilmId,
                             ];
 
                             $self->action("Service\Films\ImportActors")->run($data);

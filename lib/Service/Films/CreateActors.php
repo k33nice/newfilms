@@ -9,8 +9,6 @@ class CreateActors extends \Service\Base {
             'Name'   => [ 'required', 'not_empty' ],
             'Surname' => ['required'],
             'FilmId' => ['required', 'not_empty']
-            // 'Year'   => [ 'required', 'not_empty'/*, 'positive_integer', number_between => [1900, 2020], 'length_equal' => 4*/],
-            // 'Format' => [ 'required', 'not_empty'/*'one_of' => ['VHS', 'DVD', 'BluRay'] */],
         ];
 
         return \Service\Validator::validate($params, $rules);
@@ -25,10 +23,6 @@ class CreateActors extends \Service\Base {
             $actor->setFilmId($params['FilmId']);
             $actor->save();
 
-            // return [
-            //     'Id' => $film->getId(),
-            //     'status' => 1
-            // ];
         } catch (\Engine\X\AcessDenied $e) {
             throw new \Service\X([
                 'type'    => 'ACCESS_DENIED',

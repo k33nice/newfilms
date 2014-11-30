@@ -71,7 +71,7 @@ class Films extends Base {
             if (!empty($actor[1])) {
                 $actorSurname = $actor[1];
             } else {
-                $actorSurname = 'no';
+                $actorSurname = ' ';
             }
             // $actorSurname = 'HUILO';
 

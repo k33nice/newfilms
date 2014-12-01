@@ -17,15 +17,12 @@ class Create extends \Service\Base
     {
 
         $actors = $params['ActorName'];
-
         $array = \Engine\FilmsQuery::create()->find();
-
         foreach ($array as $film) {
             $idArray[] = [
                 "Id" => $film->getId(),
             ];
         }
-
         $id = array_pop($idArray);
         $id = $id['Id'];
         $actorsArray = explode(', ', $actors);
@@ -43,21 +40,20 @@ class Create extends \Service\Base
                 'Surname' => $actorSurname,
                 'FilmId'  => $id,
             ];
-        try {
-            $actor = new \Engine\Actors();
-            $actor->setName($params['Name']);
-            $actor->setSurname($params['Surname']);
-            $actor->setFilmId($params['FilmId']);
-            $actor->save();
-        } catch (\Engine\X\AcessDenied $e) {
-            throw new \Service\X([
-                'type'    => 'ACCESS_DENIED',
-                'fields'  => [ 'UserID' => 'ACCESS_DENIED' ],
-                'message' => 'Employee can\'t read this'
-            ]);
-        }
-        }
 
-
+            try {
+                $actor = new \Engine\Actors();
+                $actor->setName($params['Name']);
+                $actor->setSurname($params['Surname']);
+                $actor->setFilmId($params['FilmId']);
+                $actor->save();
+            } catch (\Engine\X\AcessDenied $e) {
+                throw new \Service\X([
+                    'type'    => 'ACCESS_DENIED',
+                    'fields'  => [ 'UserID' => 'ACCESS_DENIED' ],
+                    'message' => 'Employee can\'t read this'
+                ]);
+            }
+        }
     }
 }

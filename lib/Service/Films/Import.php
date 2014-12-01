@@ -6,35 +6,63 @@ class Import extends \Service\Base {
 
     public function validate($params) {
         $rules = [
-            'Name'   => [ 'required', 'not_empty' ],
-            'Year'   => [ 'required', 'not_empty'/*, 'positive_integer', number_between => [1900, 2020], 'length_equal' => 4*/],
-            'Format' => [ 'required', 'not_empty'/*'one_of' => ['VHS', 'DVD', 'BluRay'] */],
+            'Content' => [ 'required', 'not_empty' ],
         ];
 
         return \Service\Validator::validate($params, $rules);
     }
 
     public function execute($params) {
-        try {
+        $content = $params['Content'];
 
-            $film = new \Engine\Films();
-            $film->setName($params['Name']);
-            $film->setYear($params['Year']);
-            $film->setFormat($params['Format']);
-            $film->save();
+        $title  = 'Title';
+        $year   = 'Release Year';
+        $format = 'Format';
 
-            return [
-                'Id' => $film->getId(),
-                'status' => 1
-            ];
-        } catch (\Engine\X\AcessDenied $e) {
-            throw new \Service\X([
-                'type'    => 'ACCESS_DENIED',
-                'fields'  => [ 'UserID' => 'ACCESS_DENIED' ],
-                'message' => 'Employee can\'t read this'
-            ]);
-        }
+        $act = implode($content);
+        $blocks = explode('Title:', $act);
+
+        foreach ($content as $line) {
+
+            $result = explode(': ', $line, 2);
+
+            switch ($result[0]) {
+                case $title:
+                    $resultName = $result[1];
+                    continue;
+                case $year:
+                    $resultYear = $result[1];
+                    continue;
+                case $format:
+                    $resultFormat = $result[1];
+
+                    $resultName   = trim($resultName);
+                    $resultYear   = trim($resultYear);
+                    $resultFormat = trim($resultFormat);
+                    $aName = null;
+
+                    $film = [
+                        'Name'   => $resultName,
+                        'Year'   => $resultYear,
+                        'Format' => $resultFormat,
+                    ];
+
+                        try {
+                            $fil = new \Engine\Films();
+                            $fil->setName($film['Name']);
+                            $fil->setYear($film['Year']);
+                            $fil->setFormat($film['Format']);
+                            $fil->save();
+                        } catch (\Engine\X\AcessDenied $e) {
+                            throw new \Service\X([
+                                'type'    => 'ACCESS_DENIED',
+                                'fields'  => [ 'UserID' => 'ACCESS_DENIED' ],
+                                'message' => 'Employee can\'t read this'
+                            ]);
+                        }
+                    break;
+
+            }
+        } //End Foreach
     }
 }
-
-?>

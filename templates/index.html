@@ -71,7 +71,7 @@
                     html: grid
                 }).appendTo("div.a");
                 // init create film
-                $("input[name=add-request]").click(function() {
+                $("input[name=add-request]").one("click",function() {
                     createFilm();
                 });
             });
@@ -156,6 +156,10 @@
             function(){
                 $(this).val('');
             });
+
+        $(".add").submit(function() {
+            $(".films").empty();
+        });
         }
 
         function postFilm() {

@@ -62,70 +62,8 @@ class Films extends Base {
         while (false !== ($entry = readdir($handle))) {
             $data['Content'] = file('uploads/' . $entry);
 
-                        $self->action("Service\Films\Import")->run($data);
-                        $self->action("Service\Actors\Import")->run($data);
-            //     }
-            // }
-
-            // $films = \Engine\FilmsQuery::create()->find();
-            // $nameArr = array();
-
-            // foreach ($films as $film) {
-            //     $row = [
-            //         "Id"   => $film->getId(),
-            //         "Name" => $film->getName(),
-            //     ];
-            //     array_push($nameArr, $row);
-            // }
-
-            // foreach ($blocks as $block) {
-            //     //Заменяем в каждом блоке с информацией о фильме, которая имеет вид
-            //     // ('Blazing SaddlesRelease Year: 1974Format: VHSStars: Mel Brooks, Clevon Little,
-            //     // Harvey Korman, Gene Wilder, Slim Pickens, Madeline Kahn')
-            //     // 'Release Year:', 'Format:', 'Stars:' на разделитель '/*/' - чтобы была извлечь имена актеров
-            //     // '/*/' такой разделитель врятли встретится в информации о фильме.
-            //     $replace = array('Release Year:', 'Format:', 'Stars:');
-
-            //     $block = str_replace($replace, "/*/", $block);
-            //     $result = explode('/*/ ', $block);
-            //     if (!empty($result[3])) {
-            //         $resultStars = $result[3];
-            //         for ($i = 0; $i < count($nameArr); $i++) {
-            //             $name = $nameArr[$i];
-            //             $name1 = $name['Name'];
-            //             $name1 = (string)$name1;
-            //             $id1 = $name['Id'];
-
-            //             if (strpos($block, $name1) === 1) {
-            //                 $resultFilmId = $id1;
-            //                 $arrStars = explode(', ', $resultStars);
-
-            //                 foreach ($arrStars as $star) {
-
-            //                     $star = explode(' ', $star, 2);
-            //                     $resultName = $star[0];
-            //                     $resultSurname = $star[1];
-
-            //                     $resultName = trim($resultName);
-            //                     $resultSurname = trim($resultSurname);
-            //                     $resultFilmId = trim($resultFilmId);
-
-            //                     $data = [
-            //                         'Name'    => $resultName,
-            //                         'Surname' => $resultSurname,
-            //                         'FilmId'  => $resultFilmId,
-            //                     ];
-
-            //                     $self->action("Service\Actors\Import")->run($data);
-            //                 }
-
-            //             }
-            //         }
-            //     }
-            // } //End Foreach blocks
+            $self->action("Service\Films\Import")->run($data);
+            $self->action("Service\Actors\Import")->run($data);
         } // End while
-
     }
 }
-
-?>

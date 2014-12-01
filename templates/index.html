@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <!--<link rel="stylesheet" href="../css/style.css"> -->
     <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <style>
@@ -16,15 +15,17 @@
 <body>
     <nav>
         <a href="/">Главная</a>
-        <!-- <a href="/add">Добавить</a> -->
-        <!-- <a href="/delete">Удалить</a> -->
         <a href="/import/">Импорт</a>
     </nav>
     <input type="submit" name="add-request" value="добавить">
     <div id="handler"></div>
     <div class="a"></div>
     <div id="message"></div>
-    <p></p>
+    <form class="search"  onsubmit="return indexFilms();">
+        <input type="text" value="" name="search" />
+        <input type="button" name="searchButton" value="Search" />
+    </form>
+
     <script src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script>
         /**
@@ -44,117 +45,66 @@
 
         var url = parser.pathname;
         /* End URl parser */
+        function indexFilms() {
+            var search = $('[name=search]', $('.search')).val();
+            var limit =
+            var offset =
+            var sortOrder = .....
 
-    jQuery(document).ready(function($) {
+            $.getJSON("/api/films", { Search : search }, function(dataResult) {
+                var films = dataResult.films;
+                var grid = '';
 
-        // $("#add").submit(function(event) {
-        //     event.preventDefault();
-        //     $.ajax({
-        //         url: '/api/films',
-        //         type: 'post',
-        //         // data: $("#put").serializeArray(),
-        //         success: function(data) {
-        //             // $("#results").html(data);
-        //         }
-        //     });
-        // });
+                $.each(films, function(k, file) {
+                    grid +=
+                        "<li id='" + film.Id + "'>"+
+                            "<form method='post' class='delete' action='/api/films/"+film.Id+"'>"+
+                                "<input value='DELETE' name='_METHOD' type='hidden'>" +
+                                "<input value='удалить' type='submit' class='del-butt' name='del-submit'>"
+                                + film.Name +
+                           "</form>"+
+                           "<a href='"+film.Id +"'>Info</a>"+
+                       "</li>"
+                });
 
-        $.ajax({
-                url: "/api/films"+url,
-                type: "GET",
-
-                contentType: "application/json; charset=utf-8",
-                success: function(resultData) {
-
-                        var u = new RegExp("/\d*");
-                        if(u.test(url)===false) {
-                            delete this.url;
-                        };
-
-                    switch(url) {
-                        case "/":
-                            var films = [];
-                            $.each(resultData, function(key, val) {
-
-                                var fil = [];
-
-                                $.each(val, function(k, value) {
-                                    fil.push(
-                                        "<li id='" + value.Id + "'>"+
-                                            "<form method='post' class='delete' action='/api/films/"+value.Id+"'>"+
-                                                "<input value='DELETE' name='_METHOD' type='hidden'>" +
-                                                "<input value='удалить' type='submit' class='del-butt' name='del-submit'>"
-                                                + value.Name +
-                                           "</form>"+
-                                           "<a href='"+value.Id +"'>Info</a>"+
-                                       "</li>"
-                                       );
-                                    $(".delete").submit(function(event) {
-                                        event.preventDefault();
-                                            $.ajax({
-                                            url: '/api/films/'+vlue.Id,
-                                            type: 'delete',
-                                            success: function() {
-                                                // $("#message").text('film deleted');
-                                                window.loocation.href = "http://google.com";
-                                            }
-                                        });
-                                    });
-                                });
-                                $("<ul/>", {
-                                    "class": "films",
-                                    html: fil.join("")
-                                }).appendTo("div.a");
-                            });
-                            break;
-                        case url:
-                            var films = [];
-                            $.each(resultData, function(key, value) {
-                                films.push(
-                                    "<li id='" + value.Id + "'>"+
-                                        "<form method='post' action='api/films/"+ value.Id+"'>"+
-                                            "<input value='DELETE' name='_METHOD' type='hidden'>" +
-                                            "<input value='удалить' type='submit' class='del-butt' name='del-submit'>"
-                                            + "<span>"+value.Name+"</span><span>"+value.Year+"</span><span>"+value.Format+"</span>"+
-                                            "<span>"+value.Stars+"</span>"+
-                                       "</form>"+
-                                   "</li>"
-                               );
-                            });
-                              $("<ul/>", {
-                                    "class": "films",
-                                    html: films.join("")
-                                }).appendTo("div.a");
-                            break;
-
-                   } //End switch
-                },
-                timeout: 120000,
+                $("<ul/>", {
+                    "class": "films",
+                    html: grid
+                }).appendTo("div.a");
+                // init create film
             });
-    });
+            return false;
+        }
 
-    /** Adding new fields for actors*/
-    // $(document).ready(function() {
-    //     var max_fields      = 10; //maximum input boxes allowed
-    //     var wrapper         = $(".input_fields_wrap"); //Fields wrapper
-    //     var add_button      = $(".add_field_button"); //Add button ID
+        function showFilm(id) {
+            $.getJSON("/api/films/" + id, function(dataResult) {
+                var value = dataResult.film; // rename to film
+                var html =
+                    "<li id='" + value.Id + "'>"+
+                        "<form method='post' action='/api/films/"+ value.Id+"'>"+
+                            "<input value='DELETE' name='_METHOD' type='hidden'>" +
+                            "<input value='удалить' type='submit' class='del-butt' name='del-submit'>"
+                            + "<span>"+value.Name+"</span><span>"+value.Year+"</span><span>"+value.Format+"</span>"+
+                            "<span>"+value.Stars+"</span>"+
+                       "</form>"+
+                   "</li>"
+                    ;
 
-    //     var x = 1; //initlal text box count
-    //     $(add_button).click(function(e){ //on add input button click
-    //         e.preventDefault();
-    //         if(x < max_fields){ //max input box allowed
-    //             x++; //text box increment
-    //             $(wrapper).append('<div><input type="text" name="mytext[]"/><a href="#" class="remove_field">Remove</a></div>'); //add input box
-    //         }
-    //     });
+                $("<ul/>", {
+                    "class": "films",
+                    html: html
+                }).appendTo("div.a");
+              // init delete action
+            });
+        }
 
-    //     $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
-    //         e.preventDefault(); $(this).parent('div').remove(); x--;
-    //     })
-    // });
+        function deleteFilm(id) {
 
-    $("input[name=add-request]").click(function() {
-        var addForm = document.createElement("form");
+        }
+
+        function createFilm() {
+            $("input[name=add-request]").click(function() {
+                var addForm = document.createElement("form");
                     addForm.setAttribute("method", "post");
                     addForm.setAttribute("action", "/api/films/");
                     addForm.setAttribute("class", "add");
@@ -190,36 +140,32 @@
                 addForm.appendChild(addSubmit);
 
                 document.getElementsByTagName("div")[0].appendChild(addForm);
+            }
 
-                /*Clear inputs*/
-                $('input:text').click(
-                function(){
-                    $(this).val('');
+        /*Clear inputs*/
+        $('input:text').click(
+        function(){
+            $(this).val('');
+        });
+
+        $(".add").submit(function(event) {
+                event.preventDefault();
+                $.ajax({
+                    url: '/api/films/',
+                    type: 'post',
+                    success: function() {
+                        $("#message").text('import success');
+                    }
                 });
+            });
+        }
 
-    });
-        var id ;
+        /*function updateFile(id) {
 
-            var searchForm = document.createElement("form");
-                searchForm.setAttribute("method", "get");
-                searchForm.setAttribute("action", "/");
+        }*/
 
-            var searchInput = document.createElement("input");
-                searchInput.setAttribute("type", "text");
-                searchInput.setAttribute("name", "search");
-
-            var searchSubmit = document.createElement("input");
-                searchSubmit.setAttribute("type", "submit");
-                searchSubmit.setAttribute("value", "поиск");
-
-                searchForm.appendChild(searchInput);
-                searchForm.appendChild(searchSubmit);
-
-                document.getElementsByTagName("div")[0].appendChild(searchForm);
-
-        switch (url) {
-            case "/import/":
-                var uploadForm = document.createElement("form");
+        function importFilm() {
+            var uploadForm = document.createElement("form");
                     uploadForm.setAttribute("method","post");
                     uploadForm.setAttribute("action","../upload.php");
                     uploadForm.setAttribute("id", "upload");
@@ -238,14 +184,10 @@
                     importForm.setAttribute("action","/import/");
                     importForm.setAttribute("id", "import");
 
-                // var importImput = document.createElement("input");
-                //     importImput.setAttribute("type","file");
-
                 var importSubmit = document.createElement("input");
                     importSubmit.setAttribute("type","submit");
                     importSubmit.setAttribute("value","import");
 
-                // importForm.appendChild(importImput);
                 importForm.appendChild(importSubmit);
                 uploadForm.appendChild(uploadImput);
                 uploadForm.appendChild(uploadSubmit);
@@ -253,33 +195,32 @@
                 document.getElementsByTagName("body")[0].appendChild(uploadForm);
                 document.getElementsByTagName("body")[0].appendChild(importForm);
 
+            $("#import").submit(function(event) {
+                event.preventDefault();
+                $.ajax({
+                    url: '/api/films/import/',
+                    type: 'post',
+                    success: function() {
+                        $("#message").text('import success');
+                    }
+                });
+            });
+        }
 
-                break;
-        };
+        function init() {
 
-    $("#import").submit(function(event) {
-        event.preventDefault();
-        $.ajax({
-            url: '/api/films/import/',
-            type: 'post',
-            success: function() {
-                $("#message").text('import success');
+            if ( url == '/' ) {
+                indexFilms();
+            } else if ( url == '/import/' ) {
+                importFilm();
+            } else if ( url.match(/(\d+)/, matched) ) {
+                var id = matched[1];
+                showFilm(id);
             }
-        });
-    });
+        }
 
-    $(".add").submit(function(event) {
-        event.preventDefault();
-        $.ajax({
-            url: '/api/films/',
-            type: 'post',
-            success: function() {
-                $("#message").text('import success');
-            }
-        });
-    });
+        $(document).ready(init);
 
     </script>
-    <!-- <script></script> -->
 </body>
 </html>

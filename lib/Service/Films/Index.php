@@ -6,7 +6,7 @@ class Index extends \Service\Base {
 
     public function validate($params) {
         $rules = [
-            'search'    => [ 'max_length' => 100 ],
+            'Search'    => [ 'max_length' => 100 ],
 
             'Limit'     => [ 'integer', ['min_number' => 0] ],
             'Offset'    => [ 'integer', ['min_number' => 0] ],
@@ -20,9 +20,9 @@ class Index extends \Service\Base {
 
     public function execute($params) {
         $params += [
-            'search' => '',
+            'Search' => '',
 
-            'Limit'  => 0,
+            'Limit'  => 10,
             'Offset' => 0,
 
             'SortField' => 'Name',
@@ -31,24 +31,23 @@ class Index extends \Service\Base {
 
         $query = \Engine\FilmsQuery::create();
 
+        if ( $params['Search'] ) $query->filterByName($params['Search'] . '%'. Criteria::Like); // todo
+
         $totalCount = $query->count();
-        $films =      $query->limit(  $params['Limit']  )
+        $films      = $query->limit(  $params['Limit']  )
                             ->offset( $params['Offset'] )
-                            // ->filterByName($params['search'] . '%')
                             ->orderByName()
                             ->find();
 
-        $rows = array();
+        $rows = [];
 
         foreach ($films as $film) {
-            $row = [
-                "Id"   => $film->getId(),
-                "Name" => $film->getName(),
-                // "Year"   => $film->getYear(),
-                // "Format" => $film->getFormat(),
+            $rows[] = [
+                "Id"     => $film->getId(),
+                "Name"   => $film->getName(),
+                "Year"   => $film->getYear(),
+                "Format" => $film->getFormat(),
             ];
-
-            array_push($rows, $row);
         }
 
         return [

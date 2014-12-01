@@ -1,8 +1,8 @@
 <?php
 
-namespace Service\Films;
+namespace Service\Actors;
 
-class CreateActors extends \Service\Base
+class Create extends \Service\Base
 {
     public function validate($params)
     {

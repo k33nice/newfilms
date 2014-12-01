@@ -10,6 +10,10 @@
         form {display: inline-block; margin: 0.5em;}
         ul{list-style: none;}
         span{margin: 0 0.6em;}
+        span.delete{border:1px solid #000;border-radius: 5px;cursor: pointer;}
+        span.delete:hover{border-radius: 7px;background: #ccc;}
+        span.delete:active{background: #f00;}
+        a{border:1px solid #ccc;border-radius: 25%;}
     </style>
 </head>
 <body>
@@ -23,7 +27,7 @@
     <div id="message"></div>
     <form class="search"  onsubmit="return indexFilms();">
         <input type="text" value="" name="search" />
-        <input type="button" name="searchButton" value="Search" />
+        <input type="submit" name="searchButton" value="Search" />
     </form>
 
     <script src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
@@ -33,38 +37,32 @@
          * @type {[type]}
          */
         var parser = document.createElement('a');
-        parser.href = document.URL;
+            parser.href = document.URL;
 
-        parser.protocol; // => "http:"
-        parser.hostname; // => "example.com"
-        parser.port;     // => "3000"
-        parser.pathname; // => "/pathname/"
-        parser.search;   // => "?search=test"
-        parser.hash;     // => "#hash"
-        parser.host;     // => "example.com:3000"
+            parser.protocol; // => "http:"
+            parser.hostname; // => "example.com"
+            parser.port;     // => "3000"
+            parser.pathname; // => "/pathname/"
+            parser.search;   // => "?search=test"
+            parser.hash;     // => "#hash"
+            parser.host;     // => "example.com:3000"
 
         var url = parser.pathname;
         /* End URl parser */
+
         function indexFilms() {
             var search = $('[name=search]', $('.search')).val();
-            var limit =
-            var offset =
-            var sortOrder = .....
+            var limit = 10;
+            var offset = 10;
+            var sortOrder = 'desc';
 
-            $.getJSON("/api/films", { Search : search }, function(dataResult) {
-                var films = dataResult.films;
+            $.getJSON("/api/films", { Search : search, }, function(dataResult) {
+                var films = dataResult.Films;
                 var grid = '';
 
-                $.each(films, function(k, file) {
+                $.each(films, function(key, film) {
                     grid +=
-                        "<li id='" + film.Id + "'>"+
-                            "<form method='post' class='delete' action='/api/films/"+film.Id+"'>"+
-                                "<input value='DELETE' name='_METHOD' type='hidden'>" +
-                                "<input value='удалить' type='submit' class='del-butt' name='del-submit'>"
-                                + film.Name +
-                           "</form>"+
-                           "<a href='"+film.Id +"'>Info</a>"+
-                       "</li>"
+                        "<li id='" + film.Id + "'><span>"+ film.Name + "</span><a href='"+film.Id +"'>Info...</a>"+ "</li>"
                 });
 
                 $("<ul/>", {
@@ -72,29 +70,38 @@
                     html: grid
                 }).appendTo("div.a");
                 // init create film
+                $("input[name=add-request]").click(function(){
+                    createFilm();
+                });
             });
             return false;
         }
 
         function showFilm(id) {
             $.getJSON("/api/films/" + id, function(dataResult) {
-                var value = dataResult.film; // rename to film
+                var film = dataResult.Film; // rename to film
                 var html =
-                    "<li id='" + value.Id + "'>"+
-                        "<form method='post' action='/api/films/"+ value.Id+"'>"+
-                            "<input value='DELETE' name='_METHOD' type='hidden'>" +
-                            "<input value='удалить' type='submit' class='del-butt' name='del-submit'>"
-                            + "<span>"+value.Name+"</span><span>"+value.Year+"</span><span>"+value.Format+"</span>"+
-                            "<span>"+value.Stars+"</span>"+
-                       "</form>"+
-                   "</li>"
-                    ;
+                    "<li id='" + film.Id + "'>"+
+                            "<span>"+film.Name+"</span><span>"+film.Year+"</span><span>"+film.Format+"</span>"+
+                            "<span>"+film.Stars+"</span>"+
+                            "<span class='delete'>DELETE</span>"+
+                   "</li>";
 
                 $("<ul/>", {
                     "class": "films",
                     html: html
                 }).appendTo("div.a");
-              // init delete action
+
+                // init delete action
+                $(document).on('click', 'span.delete', function() {
+                    $.ajax({
+                        url: '/api/films/'+film.Id,
+                        type: 'delete',
+                        success: function() {
+
+                        }
+                    });
+                });
             });
         }
 
@@ -103,61 +110,61 @@
         }
 
         function createFilm() {
-            $("input[name=add-request]").click(function() {
-                var addForm = document.createElement("form");
-                    addForm.setAttribute("method", "post");
-                    addForm.setAttribute("action", "/api/films/");
-                    addForm.setAttribute("class", "add");
+            var addForm = document.createElement("form");
+                addForm.setAttribute("onsubmit", "return postFilm();");
+                addForm.setAttribute("class", "add");
 
-                var titleAddImput = document.createElement("input");
-                    titleAddImput.setAttribute("type", "text");
-                    titleAddImput.setAttribute("name", "Name");
-                    titleAddImput.setAttribute("value", "title");
+            var titleAddImput = document.createElement("input");
+                titleAddImput.setAttribute("type", "text");
+                titleAddImput.setAttribute("name", "Name");
+                titleAddImput.setAttribute("value", "title");
 
-                var yearAddImput = document.createElement("input");
-                    yearAddImput.setAttribute("type", "text");
-                    yearAddImput.setAttribute("name", "Year");
-                    yearAddImput.setAttribute("value", "year");
+            var yearAddImput = document.createElement("input");
+                yearAddImput.setAttribute("type", "text");
+                yearAddImput.setAttribute("name", "Year");
+                yearAddImput.setAttribute("value", "year");
 
-                var formatAddImput = document.createElement("input");
-                    formatAddImput.setAttribute("type", "text");
-                    formatAddImput.setAttribute("name", "Format");
-                    formatAddImput.setAttribute("value", "format");
+            var formatAddImput = document.createElement("input");
+                formatAddImput.setAttribute("type", "text");
+                formatAddImput.setAttribute("name", "Format");
+                formatAddImput.setAttribute("value", "format");
 
-                var actorNameAddImput = document.createElement("input");
-                    actorNameAddImput.setAttribute("type", "text");
-                    actorNameAddImput.setAttribute("name", "ActorName");
-                    actorNameAddImput.setAttribute("value", "name");
+            var actorNameAddImput = document.createElement("input");
+                actorNameAddImput.setAttribute("type", "text");
+                actorNameAddImput.setAttribute("name", "ActorName");
+                actorNameAddImput.setAttribute("value", "name");
 
-                var addSubmit = document.createElement("input");
-                    addSubmit.setAttribute("type", "submit");
-                    addSubmit.setAttribute("value", "добавить");
+            var addSubmit = document.createElement("input");
+                addSubmit.setAttribute("type", "submit");
+                addSubmit.setAttribute("value", "добавить");
 
-                addForm.appendChild(titleAddImput);
-                addForm.appendChild(yearAddImput);
-                addForm.appendChild(formatAddImput);
-                addForm.appendChild(actorNameAddImput);
-                addForm.appendChild(addSubmit);
+            addForm.appendChild(titleAddImput);
+            addForm.appendChild(yearAddImput);
+            addForm.appendChild(formatAddImput);
+            addForm.appendChild(actorNameAddImput);
+            addForm.appendChild(addSubmit);
 
-                document.getElementsByTagName("div")[0].appendChild(addForm);
-            }
+            document.getElementsByTagName("div")[0].appendChild(addForm);
 
-        /*Clear inputs*/
-        $('input:text').click(
-        function(){
-            $(this).val('');
-        });
-
-        $(".add").submit(function(event) {
-                event.preventDefault();
-                $.ajax({
-                    url: '/api/films/',
-                    type: 'post',
-                    success: function() {
-                        $("#message").text('import success');
-                    }
-                });
+            /*Clear inputs*/
+            $('input:text').click(
+            function(){
+                $(this).val('');
             });
+        }
+
+        function postFilm() {
+            var data = $('.add').serialize();
+            $.ajax({
+                url: '/api/films/',
+                type: 'post',
+                data: data,
+                success: function(data) {
+                    $('.a').html(data);
+                    $('#message').text('create success');
+                }
+            });
+            return false;
         }
 
         /*function updateFile(id) {
@@ -166,22 +173,25 @@
 
         function importFilm() {
             var uploadForm = document.createElement("form");
-                    uploadForm.setAttribute("method","post");
-                    uploadForm.setAttribute("action","../upload.php");
+                    uploadForm.setAttribute("onsubmit", "return uploadFile();");
+                    // uploadForm.setAttribute("method","post");
+                    // uploadForm.setAttribute("action","../upload.php");
                     uploadForm.setAttribute("id", "upload");
-                    uploadForm.setAttribute("enctype", "multipart/form-data");
+                    // uploadForm.setAttribute("enctype", "multipart/form-data");
 
                 var uploadImput = document.createElement("input");
                     uploadImput.setAttribute("type","file");
                     uploadImput.setAttribute("name","file");
+                    uploadImput.setAttribute("id","file");
 
                 var uploadSubmit = document.createElement("input");
                     uploadSubmit.setAttribute("type","submit");
                     uploadSubmit.setAttribute("value","upload");
 
                 var importForm = document.createElement("form");
-                    importForm.setAttribute("method","post");
-                    importForm.setAttribute("action","/import/");
+                    uploadForm.setAttribute("onsubmit", "return importFile();");
+                    // importForm.setAttribute("method","post");
+                    // importForm.setAttribute("action","/api/films/import/");
                     importForm.setAttribute("id", "import");
 
                 var importSubmit = document.createElement("input");
@@ -194,17 +204,35 @@
 
                 document.getElementsByTagName("body")[0].appendChild(uploadForm);
                 document.getElementsByTagName("body")[0].appendChild(importForm);
+        }
 
-            $("#import").submit(function(event) {
-                event.preventDefault();
-                $.ajax({
-                    url: '/api/films/import/',
+        function uploadFile() {
+            var file_data = $('#file').prop('files')[0];
+            var form_data = new FormData();
+            form_data.append('file', file_data)
+            $.ajax({
+                    url: '../upload.php',
+                    dataType: 'text',
+                    contentType: false,
+                    processData: false,
+                    data: form_data,
                     type: 'post',
-                    success: function() {
-                        $("#message").text('import success');
+                    success: function(){
+                        $("#message").text("upload")
                     }
-                });
             });
+            return false;
+        }
+
+        function importFile() {
+            $.ajax({
+                url: '/api/films/import/',
+                type: 'post',
+                success: function() {
+                    $('#message').text('import success')
+                }
+            });
+            return false;
         }
 
         function init() {
@@ -213,7 +241,7 @@
                 indexFilms();
             } else if ( url == '/import/' ) {
                 importFilm();
-            } else if ( url.match(/(\d+)/, matched) ) {
+            } else if ( matched = url.match(/\/(\d+)/) ) {
                 var id = matched[1];
                 showFilm(id);
             }

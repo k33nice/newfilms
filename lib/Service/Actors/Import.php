@@ -1,8 +1,8 @@
 <?php
 
-namespace Service\Films;
+namespace Service\Actors;
 
-class ImportActors extends \Service\Base {
+class Import extends \Service\Base {
 
     public function validate($params) {
         $rules = [
@@ -17,14 +17,14 @@ class ImportActors extends \Service\Base {
     public function execute($params) {
         try {
 
-            $film = new \Engine\Actors();
-            $film->setName($params['Name']);
-            $film->setSurname($params['Surname']);
-            $film->setFilmId($params['FilmId']);
-            $film->save();
+            $actor = new \Engine\Actors();
+            $actor->setName($params['Name']);
+            $actor->setSurname($params['Surname']);
+            $actor->setFilmId($params['FilmId']);
+            $actor->save();
 
             return [
-                'Id' => $film->getId(),
+                'Id' => $actor->getId(),
                 'status' => 1
             ];
         } catch (\Engine\X\AcessDenied $e) {

@@ -68,7 +68,7 @@ class Films extends Base {
                 'Surname' => $actorSurname,
                 'FilmId'  => $id,
             ];
-            $self->action("Service\Films\CreateActors")->run($data);
+            $self->action("Service\Actors\Create")->run($data);
         }
     }
 
@@ -87,11 +87,6 @@ class Films extends Base {
     public function import()
     {
         $self = $this;
-
-        // $uploaddir = "uploads/";
-        // $uploadfile = $uploaddir.basename($_FILES['file']['name']);
-
-        // move_uploaded_file($_FILES['file']['tmp_name'], $uploadfile);
 
         $handle = opendir('uploads/');
         while (false !== ($entry = readdir($handle))) {
@@ -186,7 +181,7 @@ class Films extends Base {
                                     'FilmId'  => $resultFilmId,
                                 ];
 
-                                $self->action("Service\Films\ImportActors")->run($data);
+                                $self->action("Service\Actors\Import")->run($data);
                             }
 
                         }

@@ -13,7 +13,6 @@ CREATE TABLE IF NOT EXISTS actors(
   surname VARCHAR(200) COMMENT 'Фамилия актера',
   film_id INT(11) UNSIGNED NOT NULL COMMENT 'Уникальный идентификатор фильма',
   PRIMARY KEY (id),
-  UNIQUE KEY (name, surname, film_id),
   FOREIGN KEY (film_id)
   REFERENCES films.films(id)
     ON DELETE CASCADE

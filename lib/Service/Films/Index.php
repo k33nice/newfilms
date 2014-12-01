@@ -22,7 +22,7 @@ class Index extends \Service\Base {
         $params += [
             'Search' => '',
 
-            'Limit'  => 10,
+            'Limit'  => 25,
             'Offset' => 0,
 
             'SortField' => 'Name',

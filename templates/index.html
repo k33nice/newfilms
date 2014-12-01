@@ -233,10 +233,6 @@
                     uploadSubmit.setAttribute("type","submit");
                     uploadSubmit.setAttribute("value","upload");
 
-
-
-
-
                 var importForm = document.createElement("form");
                     importForm.setAttribute("method","post");
                     importForm.setAttribute("action","/import/");
@@ -254,8 +250,8 @@
                 uploadForm.appendChild(uploadImput);
                 uploadForm.appendChild(uploadSubmit);
 
-                document.getElementsByTagName("body")[0].appendChild(importForm);
                 document.getElementsByTagName("body")[0].appendChild(uploadForm);
+                document.getElementsByTagName("body")[0].appendChild(importForm);
 
 
                 break;

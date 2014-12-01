@@ -39,35 +39,7 @@ class Films extends Base {
         $self = $this;
         $data = $self->request()->params();
         $self->action("Service\Films\Create")->run($data);
-        $actors = $data['ActorName'];
-
-        $array = \Engine\FilmsQuery::create()->find();
-
-        foreach ($array as $film) {
-            $idArray[] = [
-                "Id" => $film->getId(),
-            ];
-        }
-
-        $id = array_pop($idArray);
-        $id = $id['Id'];
-        $actorsArray = explode(', ', $actors);
-
-        foreach ($actorsArray as $actor) {
-            $actor = explode(' ', $actor, 2);
-            $actorName = $actor[0];
-            if (!empty($actor[1])) {
-                $actorSurname = $actor[1];
-            } else {
-                $actorSurname = ' ';
-            }
-            $data = [
-                'Name'    => $actorName,
-                'Surname' => $actorSurname,
-                'FilmId'  => $id,
-            ];
-            $self->action("Service\Actors\Create")->run($data);
-        }
+        $self->action("Service\Actors\Create")->run($data);
     }
 
     public function update($Id)

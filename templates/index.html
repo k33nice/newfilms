@@ -56,6 +56,7 @@
             var offset = 0;
             var sortOrder = 'desc';
 
+
             $.getJSON("/api/films", { Search : search }, function(dataResult) {
                 var films = dataResult.Films;
                 var grid = '';
@@ -70,12 +71,16 @@
                     html: grid
                 }).appendTo("div.a");
                 // init create film
-                $("input[name=add-request]").click(function(){
+                $("input[name=add-request]").click(function() {
                     createFilm();
                 });
             });
             return false;
         }
+
+        $(".search").submit(function() {
+            $(".films").empty();
+        });
 
         function showFilm(id) {
             $.getJSON("/api/films/" + id, function(dataResult) {

@@ -41,21 +41,19 @@ class Films extends Base {
         $self->action("Service\Films\Create")->run($data);
         $actors = $data['ActorName'];
 
-        $idArray = \Engine\FilmsQuery::create()->find();
-        $idArr = array();
+        $array = \Engine\FilmsQuery::create()->find();
 
-        foreach ($idArray as $film) {
-            $row = [
+        foreach ($array as $film) {
+            $idArray[] = [
                 "Id" => $film->getId(),
             ];
-            array_push($idArr, $row);
         }
 
-        $id = array_pop($idArr);
+        $id = array_pop($idArray);
         $id = $id['Id'];
-        $actorsArr = explode(', ', $actors);
+        $actorsArray = explode(', ', $actors);
 
-        foreach ($actorsArr as $actor) {
+        foreach ($actorsArray as $actor) {
             $actor = explode(' ', $actor, 2);
             $actorName = $actor[0];
             if (!empty($actor[1])) {

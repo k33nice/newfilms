@@ -14,6 +14,7 @@
         span.delete:hover{border-radius: 7px;background: #ccc;}
         span.delete:active{background: #f00;}
         a{border:1px solid #ccc;border-radius: 25%;}
+        #message{color: #0f0;}
     </style>
 </head>
 <body>
@@ -22,14 +23,13 @@
         <a href="/import/">Импорт</a>
     </nav>
     <input type="submit" name="add-request" value="добавить">
-    <div id="handler"></div>
-    <div class="a"></div>
-    <div id="message"></div>
     <form class="search"  onsubmit="return indexFilms();">
         <input type="text" value="" name="search" />
         <input type="submit" name="searchButton" value="Search" />
     </form>
-
+    <div id="handler"></div>
+    <div class="a"></div>
+    <div id="message"></div>
     <script src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script>
         /**
@@ -53,10 +53,10 @@
         function indexFilms() {
             var search = $('[name=search]', $('.search')).val();
             var limit = 10;
-            var offset = 10;
+            var offset = 0;
             var sortOrder = 'desc';
 
-            $.getJSON("/api/films", { Search : search, }, function(dataResult) {
+            $.getJSON("/api/films", { Search : search }, function(dataResult) {
                 var films = dataResult.Films;
                 var grid = '';
 
@@ -98,7 +98,7 @@
                         url: '/api/films/'+film.Id,
                         type: 'delete',
                         success: function() {
-
+                            $("#message").text("deleted");
                         }
                     });
                 });
@@ -161,7 +161,7 @@
                 data: data,
                 success: function(data) {
                     $('.a').html(data);
-                    $('#message').text('create success');
+                    $('#message').text('create successful');
                 }
             });
             return false;
@@ -172,12 +172,11 @@
         }*/
 
         function importFilm() {
+
+            //upload form
             var uploadForm = document.createElement("form");
                     uploadForm.setAttribute("onsubmit", "return uploadFile();");
-                    // uploadForm.setAttribute("method","post");
-                    // uploadForm.setAttribute("action","../upload.php");
                     uploadForm.setAttribute("id", "upload");
-                    // uploadForm.setAttribute("enctype", "multipart/form-data");
 
                 var uploadImput = document.createElement("input");
                     uploadImput.setAttribute("type","file");
@@ -188,10 +187,13 @@
                     uploadSubmit.setAttribute("type","submit");
                     uploadSubmit.setAttribute("value","upload");
 
+                uploadForm.appendChild(uploadImput);
+                uploadForm.appendChild(uploadSubmit);
+                document.getElementsByTagName("body")[0].appendChild(uploadForm);
+
+                //import form
                 var importForm = document.createElement("form");
-                    uploadForm.setAttribute("onsubmit", "return importFile();");
-                    // importForm.setAttribute("method","post");
-                    // importForm.setAttribute("action","/api/films/import/");
+                    importForm.setAttribute("onsubmit", "return importFile();");
                     importForm.setAttribute("id", "import");
 
                 var importSubmit = document.createElement("input");
@@ -199,10 +201,6 @@
                     importSubmit.setAttribute("value","import");
 
                 importForm.appendChild(importSubmit);
-                uploadForm.appendChild(uploadImput);
-                uploadForm.appendChild(uploadSubmit);
-
-                document.getElementsByTagName("body")[0].appendChild(uploadForm);
                 document.getElementsByTagName("body")[0].appendChild(importForm);
         }
 
@@ -218,7 +216,7 @@
                     data: form_data,
                     type: 'post',
                     success: function(){
-                        $("#message").text("upload")
+                        $("#message").text("upload successful")
                     }
             });
             return false;
@@ -229,7 +227,7 @@
                 url: '/api/films/import/',
                 type: 'post',
                 success: function() {
-                    $('#message').text('import success')
+                    $('#message').text('import successful')
                 }
             });
             return false;

@@ -31,11 +31,14 @@ class Index extends \Service\Base {
 
         $query = \Engine\FilmsQuery::create();
 
-        if ( $params['Search'] ) $query->filterByName($params['Search'] . '%'. Criteria::Like); // todo
+        // if ( $params['Search'] ) {
+        //     $query->filterByName($params['Search'] . '%' . Criteria::LIKE); // todo
+        // }
 
         $totalCount = $query->count();
         $films      = $query->limit(  $params['Limit']  )
                             ->offset( $params['Offset'] )
+                            ->filterByName($params['Search'] . '%')
                             ->orderByName()
                             ->find();
 

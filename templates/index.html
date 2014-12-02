@@ -14,6 +14,7 @@
         span.delete:hover{border-radius: 7px;background: #ccc;}
         span.delete:active{background: #f00;}
         a{border:1px solid #ccc;border-radius: 25%;}
+        .searched {background-color:#eee;}
         #message{color: #0f0;}
     </style>
 </head>
@@ -22,7 +23,7 @@
         <a href="/">Главная</a>
         <a href="/import/">Импорт</a>
     </nav>
-    <input type="submit" name="add-request" value="добавить">
+    <input type="submit" class="create" name="add-request" value="добавить">
     <form class="search"  onsubmit="return indexFilms();">
         <input type="text" value="" name="search" />
         <input type="submit" name="searchButton" value="Search" />
@@ -70,6 +71,11 @@
                     "class": "films",
                     html: grid
                 }).appendTo("div.a");
+                if (search.length) {
+                    $('ul.films li').each(function(){
+                        $(this).addClass('searched');
+                    });
+                }
                 // init create film
                 $("input[name=add-request]").one("click",function() {
                     createFilm();
@@ -108,6 +114,7 @@
                     });
                 });
             });
+            $('input').remove('.create');
         }
 
         function deleteFilm(id) {
@@ -124,8 +131,7 @@
             $('<input type="submit" vlaue="добавить">').appendTo('.add');
 
             /*Clear inputs*/
-            $('input:text').click(
-            function(){
+            $('input:text').bind('focus', function() {
                 $(this).val('');
             });
 

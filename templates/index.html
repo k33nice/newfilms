@@ -115,41 +115,13 @@
         }
 
         function createFilm() {
-            var addForm = document.createElement("form");
-                addForm.setAttribute("onsubmit", "return postFilm();");
-                addForm.setAttribute("class", "add");
 
-            var titleAddImput = document.createElement("input");
-                titleAddImput.setAttribute("type", "text");
-                titleAddImput.setAttribute("name", "Name");
-                titleAddImput.setAttribute("value", "title");
-
-            var yearAddImput = document.createElement("input");
-                yearAddImput.setAttribute("type", "text");
-                yearAddImput.setAttribute("name", "Year");
-                yearAddImput.setAttribute("value", "year");
-
-            var formatAddImput = document.createElement("input");
-                formatAddImput.setAttribute("type", "text");
-                formatAddImput.setAttribute("name", "Format");
-                formatAddImput.setAttribute("value", "format");
-
-            var actorNameAddImput = document.createElement("input");
-                actorNameAddImput.setAttribute("type", "text");
-                actorNameAddImput.setAttribute("name", "ActorName");
-                actorNameAddImput.setAttribute("value", "name");
-
-            var addSubmit = document.createElement("input");
-                addSubmit.setAttribute("type", "submit");
-                addSubmit.setAttribute("value", "добавить");
-
-            addForm.appendChild(titleAddImput);
-            addForm.appendChild(yearAddImput);
-            addForm.appendChild(formatAddImput);
-            addForm.appendChild(actorNameAddImput);
-            addForm.appendChild(addSubmit);
-
-            document.getElementsByTagName("div")[0].appendChild(addForm);
+            $('<form class="add" onsubmit="return postFilm();"></form>').appendTo('#handler');
+            $('<input name="Name" type="text" value="title">').appendTo('.add');
+            $('<input name="Year" type="text" value="title">').appendTo('.add');
+            $('<input name="Format" type="text" value="title">').appendTo('.add');
+            $('<input name="ActorName" type="text" value="name">').appendTo('.add');
+            $('<input type="submit" vlaue="добавить">').appendTo('.add');
 
             /*Clear inputs*/
             $('input:text').click(
@@ -181,36 +153,10 @@
         }*/
 
         function importFilm() {
-
-            //upload form
-            var uploadForm = document.createElement("form");
-                    uploadForm.setAttribute("onsubmit", "return uploadFile();");
-                    uploadForm.setAttribute("id", "upload");
-
-                var uploadImput = document.createElement("input");
-                    uploadImput.setAttribute("type","file");
-                    uploadImput.setAttribute("name","file");
-                    uploadImput.setAttribute("id","file");
-
-                var uploadSubmit = document.createElement("input");
-                    uploadSubmit.setAttribute("type","submit");
-                    uploadSubmit.setAttribute("value","upload");
-
-                uploadForm.appendChild(uploadImput);
-                uploadForm.appendChild(uploadSubmit);
-                document.getElementsByTagName("body")[0].appendChild(uploadForm);
-
-                //import form
-                var importForm = document.createElement("form");
-                    importForm.setAttribute("onsubmit", "return importFile();");
-                    importForm.setAttribute("id", "import");
-
-                var importSubmit = document.createElement("input");
-                    importSubmit.setAttribute("type","submit");
-                    importSubmit.setAttribute("value","import");
-
-                importForm.appendChild(importSubmit);
-                document.getElementsByTagName("body")[0].appendChild(importForm);
+            $('<form onsubmit="return uploadFile();" id="upload"></form>').appendTo('#handler');
+            $('<input id="file" name="file", type="file" /><input type="submit" value="upload">').appendTo('#upload');
+            $('<form onsubmit="return importFile();" id="import"></form>').appendTo('#handler');
+            $('<input type="submit" value="import">').appendTo('#import');
         }
 
         function uploadFile() {

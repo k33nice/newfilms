@@ -28,6 +28,11 @@
         <input type="text" value="" name="search" />
         <input type="submit" name="searchButton" value="Search" />
     </form>
+    <select id="limit">
+        <option>5</option>
+        <option>10</option>
+        <option>all</option>
+    </select>
     <div id="handler"></div>
     <div class="a"></div>
     <div id="message"></div>
@@ -51,36 +56,48 @@
         var url = parser.pathname;
         /* End URl parser */
 
+        $("#limit").change(function(){
+            limit = $(this).val();
+
+
+            $(".films").empty();
+            indexFilms();
+        });
+
         function indexFilms() {
             var search = $('[name=search]', $('.search')).val();
-            var limit = 10;
-            var offset = 0;
+            var limit = $('#limit').val();
+            if(limit === 'all') { limit=100000; }
+            var offset = 10;
             var sortOrder = 'desc';
 
+            $.getJSON(
+                "/api/films",
+                { Limit: limit, Search: search, Offset: offset },
+                function(dataResult) {
+                    var films = dataResult.Films;
+                    var grid = '';
 
-            $.getJSON("/api/films", { Search : search }, function(dataResult) {
-                var films = dataResult.Films;
-                var grid = '';
-
-                $.each(films, function(key, film) {
-                    grid +=
-                        "<li id='" + film.Id + "'><span>"+ film.Name + "</span><a href='"+film.Id +"'>Info...</a>"+ "</li>"
-                });
-
-                $("<ul/>", {
-                    "class": "films",
-                    html: grid
-                }).appendTo("div.a");
-                if (search.length) {
-                    $('ul.films li').each(function(){
-                        $(this).addClass('searched');
+                    $.each(films, function(key, film) {
+                        grid +=
+                            "<li id='" + film.Id + "'><span>"+ film.Name + "</span><a href='"+film.Id +"'>Info...</a>"+ "</li>"
                     });
-                }
-                // init create film
-                $("input[name=add-request]").one("click",function() {
-                    createFilm();
+
+                    $("<ul/>", {
+                        "class": "films",
+                        html: grid
+                    }).appendTo("div.a");
+                    if (search.length) {
+                        $('ul.films li').each(function(){
+                            $(this).addClass('searched');
+                        });
+                    }
+
+                    // init create film
+                    $("input[name=add-request]").one("click",function() {
+                        createFilm();
+                    });
                 });
-            });
             return false;
         }
 
@@ -135,9 +152,9 @@
                 $(this).val('');
             });
 
-        $(".add").submit(function() {
-            $(".films").empty();
-        });
+            $(".add").submit(function() {
+                $(".films").empty();
+            });
         }
 
         function postFilm() {

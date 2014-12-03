@@ -17,6 +17,7 @@
         span.onePage:hover{background: #ccc;}
         span.onePage:active{background: #f00;}
         a{border:1px solid #ccc;border-radius: 25%;}
+        .pagination{display: block;}
         .searched {background-color:#eee;}
         #message{color: #0f0;}
     </style>
@@ -36,7 +37,7 @@
         <option>10</option>
         <option>all</option>
     </select>
-    <div class="pager">page:</div>
+    <div class="pagination"></div>
     <div id="handler"></div>
     <div class="a"></div>
     <div id="message"></div>
@@ -49,20 +50,20 @@
         var parser = document.createElement('a');
             parser.href = document.URL;
 
-            parser.protocol; // => "http:"
-            parser.hostname; // => "example.com"
-            parser.port;     // => "3000"
-            parser.pathname; // => "/pathname/"
-            parser.search;   // => "?search=test"
-            parser.hash;     // => "#hash"
-            parser.host;     // => "example.com:3000"
+            parser.protocol;
+            parser.hostname;
+            parser.port;
+            parser.pathname;
+            parser.search;
+            parser.hash;
+            parser.host;
 
         var url = parser.pathname;
         /* End URl parser */
 
         $("#limit").change(function(){
             $(".a").empty();
-            $(".pager").empty();
+            $(".pagination").empty();
             indexFilms();
         });
 
@@ -70,9 +71,10 @@
             $.getJSON("/api/films/", function(dataResult) {
                 var limit = $('#limit').val();
                 var pageCount = Math.ceil(dataResult.TotalCount/limit);
+                $('.pagination').text('PAGE');
                 for (var i=1; i<=pageCount; i++) {
                 var span = '<span class="onePage">'+i+'</span>'
-                        $(span).appendTo('.pager');
+                        $(span).appendTo('.pagination');
                     }
                     allFilms();
                     $('.onePage').click(function() {
@@ -95,7 +97,7 @@
             if(limit === 'all') {
                 limit=100000;
                 offset= 0;
-                $('.pager').empty();
+                $('.pagination').empty();
             }
             if (search.length) {
                 params = { Limit: limit, Search: search};
@@ -123,23 +125,21 @@
                             $(this).addClass('searched');
                         });
                     }
-                    // init create film
-                    $("input[name=add-request]").one("click",function() {
-                        createFilm();
-                    });
                 });
-
-        $(".search").submit(function() {
-            $(".pager").empty();
-            $(".a").empty();
-        });
-
+            $(".search").submit(function() {
+                $(".pagination").empty();
+                $(".a").empty();
+            });
             return false;
         }
 
+        // init create film
+        $("input[name=add-request]").one("click",function() {
+            createFilm();
+        });
 
         function showFilm(id) {
-            $('.pager').empty();
+            $('.pagination').empty();
             $.getJSON("/api/films/" + id, function(dataResult) {
                 var film = dataResult.Film; // rename to film
                 var html =
@@ -173,7 +173,7 @@
         // }
 
         function createFilm() {
-            $('.pager').empty();
+            $('.pagination').empty();
             $('<form class="add" onsubmit="return postFilm();"></form>').appendTo('#handler');
             $('<input name="Name" type="text" value="title">').appendTo('.add');
             $('<input name="Year" type="text" value="title">').appendTo('.add');
@@ -210,7 +210,7 @@
         }*/
 
         function importFilm() {
-            $('.pager').empty();
+            $('.pagination').empty();
             $('<form onsubmit="return uploadFile();" id="upload"></form>').appendTo('#handler');
             $('<input id="file" name="file", type="file" /><input type="submit" value="upload">').appendTo('#upload');
             $('<form onsubmit="return importFile();" id="import"></form>').appendTo('#handler');
@@ -247,10 +247,10 @@
         }
 
         function init() {
-
             if ( url == '/' ) {
                 indexFilms();
             } else if ( url == '/import/' ) {
+                $('#limit').remove();
                 importFilm();
             } else if ( matched = url.match(/\/(\d+)/) ) {
                 var id = matched[1];

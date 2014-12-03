@@ -38,8 +38,10 @@ class Films extends Base {
     {
         $self = $this;
         $data = $self->request()->params();
-        $self->action("Service\Films\Create")->run($data);
-        $self->action("Service\Actors\Create")->run($data);
+        $this->run(function() use ($self, $data) {
+            $self->action("Service\Films\Create")->run($data);
+            $self->action("Service\Actors\Create")->run($data);
+        });
     }
 
     public function update($Id)

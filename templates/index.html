@@ -13,6 +13,9 @@
         span.delete{border:1px solid #000;border-radius: 5px;cursor: pointer;}
         span.delete:hover{border-radius: 7px;background: #ccc;}
         span.delete:active{background: #f00;}
+        span.onePage{border-bottom:1px solid #000;cursor: pointer;}
+        span.onePage:hover{background: #ccc;}
+        span.onePage:active{background: #f00;}
         a{border:1px solid #ccc;border-radius: 25%;}
         .searched {background-color:#eee;}
         #message{color: #0f0;}
@@ -24,15 +27,16 @@
         <a href="/import/">Импорт</a>
     </nav>
     <input type="submit" class="create" name="add-request" value="добавить">
-    <form class="search"  onsubmit="return indexFilms();">
+    <form class="search"  onsubmit="return allFilms();">
         <input type="text" value="" name="search" />
         <input type="submit" name="searchButton" value="Search" />
     </form>
     <select id="limit">
-        <option>5</option>
+        <option>7</option>
         <option>10</option>
         <option>all</option>
     </select>
+    <div class="pager">page:</div>
     <div id="handler"></div>
     <div class="a"></div>
     <div id="message"></div>
@@ -57,27 +61,54 @@
         /* End URl parser */
 
         $("#limit").change(function(){
-            limit = $(this).val();
-
-
-            $(".films").empty();
+            $(".a").empty();
+            $(".pager").empty();
             indexFilms();
         });
 
         function indexFilms() {
+            $.getJSON("/api/films/", function(dataResult) {
+                var limit = $('#limit').val();
+                var pageCount = Math.ceil(dataResult.TotalCount/limit);
+                for (var i=1; i<=pageCount; i++) {
+                var span = '<span class="onePage">'+i+'</span>'
+                        $(span).appendTo('.pager');
+                    }
+                    allFilms();
+                    $('.onePage').click(function() {
+                        page = $(this).text();
+                        $('.a').empty();
+                        allFilms(page);
+                    });
+                    return false;
+            });
+        }
+
+        function allFilms(page) {
+            if ( !page ) page=1;
             var search = $('[name=search]', $('.search')).val();
             var limit = $('#limit').val();
-            if(limit === 'all') { limit=100000; }
-            var offset = 10;
             var sortOrder = 'desc';
+            var params;
+            var offset = (page-1)*limit;
+
+            if(limit === 'all') {
+                limit=100000;
+                offset= 0;
+                $('.pager').empty();
+            }
+            if (search.length) {
+                params = { Limit: limit, Search: search};
+            } else {
+                params = { Limit: limit, Offset: offset };
+            };
 
             $.getJSON(
                 "/api/films",
-                { Limit: limit, Search: search, Offset: offset },
+                params,
                 function(dataResult) {
                     var films = dataResult.Films;
                     var grid = '';
-
                     $.each(films, function(key, film) {
                         grid +=
                             "<li id='" + film.Id + "'><span>"+ film.Name + "</span><a href='"+film.Id +"'>Info...</a>"+ "</li>"
@@ -92,20 +123,23 @@
                             $(this).addClass('searched');
                         });
                     }
-
                     // init create film
                     $("input[name=add-request]").one("click",function() {
                         createFilm();
                     });
                 });
+
+        $(".search").submit(function() {
+            $(".pager").empty();
+            $(".a").empty();
+        });
+
             return false;
         }
 
-        $(".search").submit(function() {
-            $(".films").empty();
-        });
 
         function showFilm(id) {
+            $('.pager').empty();
             $.getJSON("/api/films/" + id, function(dataResult) {
                 var film = dataResult.Film; // rename to film
                 var html =
@@ -134,12 +168,12 @@
             $('input').remove('.create');
         }
 
-        function deleteFilm(id) {
+        // function deleteFilm(id) {
 
-        }
+        // }
 
         function createFilm() {
-
+            $('.pager').empty();
             $('<form class="add" onsubmit="return postFilm();"></form>').appendTo('#handler');
             $('<input name="Name" type="text" value="title">').appendTo('.add');
             $('<input name="Year" type="text" value="title">').appendTo('.add');
@@ -176,6 +210,7 @@
         }*/
 
         function importFilm() {
+            $('.pager').empty();
             $('<form onsubmit="return uploadFile();" id="upload"></form>').appendTo('#handler');
             $('<input id="file" name="file", type="file" /><input type="submit" value="upload">').appendTo('#upload');
             $('<form onsubmit="return importFile();" id="import"></form>').appendTo('#handler');

@@ -69,7 +69,7 @@
         });
 
         function indexFilms() {
-            $.getJSON("/api/films/", function(dataResult) {
+            $.getJSON("/api/films/count/", function(dataResult) {
                 var limit = $('#limit').val();
                 var pageCount = Math.ceil(dataResult.TotalCount/limit);
                 $('.pagination').text('Page:');

@@ -14,6 +14,6 @@ CREATE TABLE IF NOT EXISTS actors(
   film_id INT(11) UNSIGNED NOT NULL COMMENT 'Уникальный идентификатор фильма',
   PRIMARY KEY (id),
   FOREIGN KEY (film_id)
-  REFERENCES films.films(id)
+  REFERENCES films(id)
     ON DELETE CASCADE
 ) ENGINE=InnoDB, DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;

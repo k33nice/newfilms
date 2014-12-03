@@ -4,6 +4,16 @@ namespace Controller;
 
 class Films extends Base {
 
+    public function count()
+    {
+        $self = $this;
+        $data = $self->request()->params();
+
+        $this->run(function() use ($self, $data) {
+            return $self->action("Service\Films\Count")->run($data);
+        });
+    }
+
     public function index()
     {
         $self = $this;

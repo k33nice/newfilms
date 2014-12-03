@@ -53,6 +53,7 @@ class AppFactory {
                 $app->post('/:Id', array($films, 'update'))->name('films_update');
                 $app->post('/', array($films, 'create'))->name('films_create');
                 $app->post('/import/', array($films, 'import'))->name('films_import');
+                $app->get('/count/', array($films, 'count'))->name('films_count');
             });
         });
 

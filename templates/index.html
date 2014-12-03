@@ -16,7 +16,8 @@
         span.onePage{border-bottom:1px solid #000;cursor: pointer;}
         span.onePage:hover{background: #ccc;}
         span.onePage:active{background: #f00;}
-        a{border:1px solid #ccc;border-radius: 25%;}
+        a{border-bottom:1px solid #ccc;}
+        .active{background-color: #f00;}
         .pagination{display: block;}
         .searched {background-color:#eee;}
         #message{color: #0f0;}
@@ -28,7 +29,7 @@
         <a href="/import/">Импорт</a>
     </nav>
     <input type="submit" class="create" name="add-request" value="добавить">
-    <form class="search"  onsubmit="return allFilms();">
+    <form class="search"  onsubmit="return filmsGrid();">
         <input type="text" value="" name="search" />
         <input type="submit" name="searchButton" value="Search" />
     </form>
@@ -71,28 +72,31 @@
             $.getJSON("/api/films/", function(dataResult) {
                 var limit = $('#limit').val();
                 var pageCount = Math.ceil(dataResult.TotalCount/limit);
-                $('.pagination').text('PAGE');
+                $('.pagination').text('Page:');
                 for (var i=1; i<=pageCount; i++) {
-                var span = '<span class="onePage">'+i+'</span>'
-                        $(span).appendTo('.pagination');
-                    }
-                    allFilms();
-                    $('.onePage').click(function() {
-                        page = $(this).text();
-                        $('.a').empty();
-                        allFilms(page);
-                    });
-                    return false;
+                    var span = '<span class="onePage">'+i+'</span>'
+                    $(span).appendTo('.pagination');
+                }
+                    filmsGrid();
+                $('.onePage').click(function() {
+                    page = $(this).text();
+                    $('.onePage').removeClass('active');
+                    $('.a').empty();
+                    filmsGrid(page);
+                });
             });
+            return false;
         }
 
-        function allFilms(page) {
+        function filmsGrid(page) {
             if ( !page ) page=1;
             var search = $('[name=search]', $('.search')).val();
             var limit = $('#limit').val();
             var sortOrder = 'desc';
             var params;
             var offset = (page-1)*limit;
+
+            $('.onePage').eq(page-1).addClass('active');
 
             if(limit === 'all') {
                 limit=100000;
@@ -113,7 +117,7 @@
                     var grid = '';
                     $.each(films, function(key, film) {
                         grid +=
-                            "<li id='" + film.Id + "'><span>"+ film.Name + "</span><a href='"+film.Id +"'>Info...</a>"+ "</li>"
+                            "<li id='" + film.Id + "'><a href='"+film.Id +"'><span>"+ film.Name + "</span></a>"+ "</li>"
                     });
 
                     $("<ul/>", {
@@ -253,6 +257,7 @@
                 $('#limit').remove();
                 importFilm();
             } else if ( matched = url.match(/\/(\d+)/) ) {
+                $('#limit').remove();
                 var id = matched[1];
                 showFilm(id);
             }

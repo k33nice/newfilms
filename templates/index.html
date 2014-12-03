@@ -17,7 +17,7 @@
         span.onePage:hover{background: #ccc;}
         span.onePage:active{background: #f00;}
         a{border-bottom:1px solid #ccc;}
-        .active{background-color: #f00;}
+        .active{font-size: 1.3em;}
         .pagination{display: block;}
         .searched {background-color:#eee;}
         #message{color: #0f0;}
@@ -95,7 +95,6 @@
             var sortOrder = 'desc';
             var params;
             var offset = (page-1)*limit;
-
             $('.onePage').eq(page-1).addClass('active');
 
             if(limit === 'all') {
@@ -180,9 +179,9 @@
             $('.pagination').empty();
             $('<form class="add" onsubmit="return postFilm();"></form>').appendTo('#handler');
             $('<input name="Name" type="text" value="title">').appendTo('.add');
-            $('<input name="Year" type="text" value="title">').appendTo('.add');
-            $('<input name="Format" type="text" value="title">').appendTo('.add');
-            $('<input name="ActorName" type="text" value="name">').appendTo('.add');
+            $('<input name="Year" type="text" value="year">').appendTo('.add');
+            $('<input name="Format" type="text" value="format">').appendTo('.add');
+            $('<input name="ActorName" type="text" value="actors">').appendTo('.add');
             $('<input type="submit" vlaue="добавить">').appendTo('.add');
 
             /*Clear inputs*/

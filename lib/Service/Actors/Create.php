@@ -7,7 +7,7 @@ class Create extends \Service\Base
     public function validate($params)
     {
         $rules = [
-            'ActorName'    => [ 'required', 'not_empty' ],
+            'ActorName' => [ 'required', 'not_empty' ],
         ];
 
         return \Service\Validator::validate($params, $rules);

@@ -1,3 +1,5 @@
+// 'use strict';
+
 /**
  * URL parser
  * @type {[type]}
@@ -22,25 +24,10 @@ $("#limit").change(function(){
     indexFilms();
 });
 
-function indexFilms() {
-    $.getJSON("/api/films/count/", function(dataResult) {
-        var limit = $('#limit').val();
-        var pageCount = Math.ceil(dataResult.TotalCount/limit);
-        $('.pagination').text('Page:');
-        for (var i=1; i<=pageCount; i++) {
-            var span = '<span class="onePage">'+i+'</span>'
-            $(span).appendTo('.pagination');
-        }
-            filmsGrid();
-        $('.onePage').click(function() {
-            page = $(this).text();
-            $('.onePage').removeClass('active');
-            $('.a').empty();
-            filmsGrid(page);
-        });
-    });
-    return false;
-} //indexFilms()
+// init create film
+$("input[name=add-request]").one("click",function() {
+    createFilm();
+});
 
 function filmsGrid(page) {
     if ( !page ) page=1;
@@ -90,10 +77,25 @@ function filmsGrid(page) {
     return false;
 } //filmsGrid()
 
-// init create film
-$("input[name=add-request]").one("click",function() {
-    createFilm();
-});
+function indexFilms() {
+    $.getJSON("/api/films/count/", function(dataResult) {
+        var limit = $('#limit').val();
+        var pageCount = Math.ceil(dataResult.TotalCount/limit);
+        if (dataResult.TotalCount>limit) $('.pagination').text('Page:');
+        for (var i=1; i<=pageCount; i++) {
+            var span = '<span class="onePage">'+i+'</span>'
+            $(span).appendTo('.pagination');
+        }
+            filmsGrid();
+        $('.onePage').click(function() {
+            page = $(this).text();
+            $('.onePage').removeClass('active');
+            $('.a').empty();
+            filmsGrid(page);
+        });
+    });
+    return false;
+} //indexFilms()
 
 function showFilm(id) {
     $('.pagination').empty();

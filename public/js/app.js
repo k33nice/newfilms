@@ -29,6 +29,21 @@ $("input[name=add-request]").one("click",function() {
     createFilm();
 });
 
+$(document).ready(init);
+
+function init() {
+    if ( url == '/' ) {
+        indexFilms();
+    } else if ( url == '/import/' ) {
+        $('#limit').remove();
+        importFilm();
+    } else if ( matched = url.match(/\/(\d+)/) ) {
+        $('#limit').remove();
+        var id = matched[1];
+        showFilm(id);
+    }
+} //init()
+
 function filmsGrid(page) {
     if ( !page ) page=1;
     var search = $('[name=search]', $('.search')).val();
@@ -204,18 +219,3 @@ function importFile() {
     });
     return false;
 } //importFile()
-
-function init() {
-    if ( url == '/' ) {
-        indexFilms();
-    } else if ( url == '/import/' ) {
-        $('#limit').remove();
-        importFilm();
-    } else if ( matched = url.match(/\/(\d+)/) ) {
-        $('#limit').remove();
-        var id = matched[1];
-        showFilm(id);
-    }
-} //init()
-
-$(document).ready(init);

@@ -1,0 +1,51 @@
+body {
+    width: 50%;
+    margin: 0 auto;
+}
+form {
+    display: inline-block;
+    margin: 0.5em;
+}
+ul {
+    list-style: none;
+}
+span {
+    margin: 0 0.6em;
+}
+span.delete {
+    border:1px solid #000;
+    border-radius: 5px;
+    cursor: pointer;
+}
+span.delete:hover {
+    border-radius: 7px;
+    background: #ccc;
+}
+span.delete:active {
+    background: #f00;
+}
+span.onePage {
+    border-bottom:1px solid #000;
+    cursor: pointer;
+}
+span.onePage:hover {
+    background: #ccc;
+}
+span.onePage:active {
+    background: #f00;
+}
+a {
+    border-bottom:1px solid #ccc;
+}
+.active {
+    font-size: 1.3em;
+}
+.pagination {
+    display: block;
+}
+.searched {
+    background-color:#eee;
+}
+#message {
+    color: #0f0;
+}
